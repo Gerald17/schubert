@@ -11,7 +11,7 @@ const menuItems = [
     icon: "pie-chart",
     component: null,
     showInMenu: true,
-    link: "WorkDay"
+    link: "/WorkDay"
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const menuItems = [
     icon: "pie-chart",
     component: null,
     showInMenu: true,
-    link: "WorkDay"
+    link: "/WorkDay"
   },
   {
     id: 3,
@@ -27,10 +27,10 @@ const menuItems = [
     icon: "pie-chart",
     component: null,
     showInMenu: true,
-    link: null,
+    link: "#",
     submenu: [
-      { id: 31, label: "Personas", icon: "pie-chart", component: null, showInMenu: true, link: "Persons" },
-      { id: 32, label: "Camiones", icon: "pie-chart", component: null, showInMenu: true, link: "Trucks" }
+      { id: 31, label: "Personas", icon: "pie-chart", component: null, showInMenu: true, link: "/Persons" },
+      { id: 32, label: "Camiones", icon: "pie-chart", component: null, showInMenu: true, link: "/Trucks" }
     ]
   }
 ];
