@@ -39,7 +39,7 @@ const SideMenu = () => {
   return (
     <>
       <div className="logo" style={{ color: "white" }}>
-        <img src={`url(${process.env.PUBLIC_URL || ""}/assets/logo.jpg)`} alt="Schubert"/>
+        <img src={`${process.env.PUBLIC_URL || ""}/assets/logo.png`} alt="Schubert" width="100%"/>
       </div>
       
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
