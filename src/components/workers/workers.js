@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Table, Divider } from "antd";
 
@@ -26,59 +26,37 @@ const columns = [
     key: 'action',
     render: () => (
       <span>
-        <button>Cambiar</button>
+        <button>Editar</button>
         <Divider type="vertical" />
-        <button>Reportar</button>
+        <button>Eliminar</button>
       </span>
     )
   }
 ];
 
-const WorkDayPersons = ({ selectedTeam, workers, fetchWorkers }) => {
+const Workers = ({ workers, fetchWorkers }) => {
 
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
-
-  // load workers when team changes
+  // load workers
   useEffect(() => {
-    if (selectedTeam) {
-      fetchWorkers();
-    }
-  }, [selectedTeam]);
+    fetchWorkers();
+  }, []);
 
   const workersKey = workers.map(workers => {
     //neccesary to remove warning from antd (every row should have a unique key)
     workers.key = workers.id;
     return workers;
   })
-  
-  const onSelectChange = selectedRowKeys => {
-    setSelectedRowKeys(selectedRowKeys)
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const hasSelected = selectedRowKeys.length > 0;
 
   return (
     <>
-      { workersKey.length > 0 && 
-        <>
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-          <Table rowSelection={rowSelection} columns={columns} dataSource={workersKey} /> 
-        </>
-      }
+      { workersKey.length > 0 && <Table columns={columns} dataSource={workersKey} /> }
     </>
   );
 };
 
 const mapStateToProps = state => {
-  const selectedTeam = state.teamsInfo.selectedTeam;
   const workers = state.workersInfo.workers;
   return {
-    selectedTeam,
     workers
   };
 };
@@ -86,4 +64,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { fetchWorkers }
-)(WorkDayPersons);
+)(Workers);

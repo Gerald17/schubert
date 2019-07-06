@@ -2,38 +2,9 @@ import React from "react";
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
-const SubMenu = Menu.SubMenu;
+import { menuItems } from './menuItems';
 
-const menuItems = [
-  {
-    id: 1,
-    label: "Iniciar Jornada",
-    icon: "pie-chart",
-    component: null,
-    showInMenu: true,
-    link: "/WorkDay"
-  },
-  {
-    id: 2,
-    label: "Terminar Jornada",
-    icon: "pie-chart",
-    component: null,
-    showInMenu: true,
-    link: "/WorkDay"
-  },
-  {
-    id: 3,
-    label: "Catalogos",
-    icon: "pie-chart",
-    component: null,
-    showInMenu: true,
-    link: "#",
-    submenu: [
-      { id: 31, label: "Personas", icon: "pie-chart", component: null, showInMenu: true, link: "/Persons" },
-      { id: 32, label: "Camiones", icon: "pie-chart", component: null, showInMenu: true, link: "/Trucks" }
-    ]
-  }
-];
+const SubMenu = Menu.SubMenu;
 
 const SideMenu = () => {
   return (
@@ -45,7 +16,8 @@ const SideMenu = () => {
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         {menuItems.map(menuItem => {         
           return (
-          menuItem.hasOwnProperty("submenu") ? 
+          menuItem.hasOwnProperty("submenu") ?
+              menuItem.showInMenu &&
               <SubMenu
                 key={menuItem.id}
                 title={
@@ -57,6 +29,7 @@ const SideMenu = () => {
               >
                 {menuItem.submenu.map(submenu => {
                   return (
+                      submenu.showInMenu &&
                       <Menu.Item key={submenu.id}>
                         <Link to={submenu.link}>{submenu.label}</Link>
                       </Menu.Item>
@@ -64,6 +37,7 @@ const SideMenu = () => {
                 })}
               </SubMenu>
             :
+              menuItem.showInMenu &&
               <Menu.Item key={menuItem.id}>
                 <Link to={menuItem.link}>
                   <Icon type={menuItem.icon} />
