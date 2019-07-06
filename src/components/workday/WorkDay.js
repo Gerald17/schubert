@@ -4,7 +4,8 @@ import React from "react";
 import { Row } from "antd";
 
 //Custom
-import WorkDayForm from './workDayForm';
+import WorkDayForm from './workDaySelectors';
+import WorkDayPersons from "./workDayPersons";
 
 const WorkDay = () => {
   return (
@@ -12,6 +13,7 @@ const WorkDay = () => {
       <h1>Crear Jornada</h1>
       <Row>
         <WorkDayForm/>
+        <WorkDayPersons/>
       </Row>
     </>
   );

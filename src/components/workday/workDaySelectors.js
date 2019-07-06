@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Button, Select, Form } from "antd";
+import { connect } from "react-redux";
+import { Select, Form } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
+import { setSelectedTeam } from "../../actions/teamActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const WorkDayFormik = ({
-  props,
+const request = new HttpRequest(null);
+
+const WorkDaySelectors = ({
   values,
-  errors,
-  touched,
   setFieldTouched,
   setFieldValue,
-  isSubmitting,
-  handleSubmit
+  handleSubmit,
+  setSelectedTeam
 }) => {
   // define state for selects
   const [siteDepartments, setSiteDepartments] = useState([]);
@@ -24,56 +25,62 @@ const WorkDayFormik = ({
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    loadInitialData();
+    loadWorkAreas();
+    loadDepartments();
   }, []);
 
-  function loadInitialData() {
-    const request = new HttpRequest(null);
-    request
-      .fetchData(endpoints.siteDepartment, null)
-      .then(response => {
-        const options = response.data.map(option => {
-          return { value: option.id, name: option.name };
-        });
-        setSiteDepartments(options);
-      })
-      .catch(error => console.log(error));
-  }
+  useEffect(() => {
+    if (values.site && values.workArea) {
+      loadTeams();
+    }
+  }, [values.site, values.workArea]);
 
-  const setSelectedValue = (resource, value, callback) => {
+  const loadDepartments = () => {
+    const requestDeparments = request.fetchData(endpoints.siteDepartment, {});
+    requestDeparments
+      .then(departments => getOptions(departments.data))
+      .then(options => setSiteDepartments(options))
+      .catch(error => handleHttpError(error));
+  };
+
+  const loadWorkAreas = () => {
+    const requestWorkAreas = request.fetchData(endpoints.workArea, {});
+    requestWorkAreas
+      .then(workAreas => getOptions(workAreas.data))
+      .then(options => setWorkAreas(options))
+      .catch(error => handleHttpError(error));
+  };
+
+  const loadTeams = () => {
+    const requestTeams = request.fetchData(
+      `${endpoints.team}?Filters=site==${values.site},workarea==${
+        values.workArea
+      }`,
+      {}
+    );
+    requestTeams
+      .then(teams => getOptions(teams.data))
+      .then(options => setTeams(options))
+      .catch(error => console.log(error));
+  };
+
+  const handleHttpError = error => {
+    console.log("error", error);
+  };
+
+  const getOptions = options => {
+    return options.map(option => {
+      return { value: option.id, name: option.name };
+    });
+  };
+
+  const setSelectedValue = (resource, value) => {
     setFieldValue(resource, value);
-    callback();
   };
 
-  const requestWorkArea = site => {
-    const request = new HttpRequest(null);
-    request
-      .fetchData(`${endpoints.workArea}/${site}`, null)
-      .then(response => {
-        let newOption = [];
-        newOption.push(response.data);
-        const options = newOption.map(option => {
-          return { value: option.id, name: option.name };
-        });
-        setWorkAreas(options);
-      })
-      .catch(error => console.log(error));
-  };
-
-  const requestTeam = (site, workArea) => {
-    const request = new HttpRequest(null);
-    request
-      .fetchData(
-        `${endpoints.team}?Filters=site==${site},workarea==${workArea}`,
-        null
-      )
-      .then(response => {
-        const options = response.data.map(option => {
-          return { value: option.id, name: option.name };
-        });
-        setTeams(options);
-      })
-      .catch(error => console.log(error));
+  const sendTeamToStore = value => {
+    setFieldValue("team", value);
+    setSelectedTeam(value);
   };
 
   return (
@@ -84,11 +91,7 @@ const WorkDayFormik = ({
           render={({ field }) => (
             <Select
               {...field}
-              onChange={value =>
-                setSelectedValue("site", value, () => {
-                  requestWorkArea(value);
-                })
-              }
+              onChange={value => setSelectedValue("site", value)}
               onBlur={() => setFieldTouched("site", true)}
               value={values.site}
               style={{ width: "200px" }}
@@ -110,11 +113,7 @@ const WorkDayFormik = ({
           render={({ field }) => (
             <Select
               {...field}
-              onChange={value =>
-                setSelectedValue("workArea", value, () => {
-                  requestTeam(values.site, value);
-                })
-              }
+              onChange={value => setSelectedValue("workArea", value)}
               onBlur={() => setFieldTouched("workArea", true)}
               value={values.workArea}
               style={{ width: "200px" }}
@@ -136,7 +135,7 @@ const WorkDayFormik = ({
           render={({ field }) => (
             <Select
               {...field}
-              onChange={value => setFieldValue("team", value)}
+              onChange={value => sendTeamToStore(value)}
               onBlur={() => setFieldTouched("team", true)}
               value={values.team}
               style={{ width: "200px" }}
@@ -152,35 +151,21 @@ const WorkDayFormik = ({
           )}
         />
       </FormItem>
-
-      <FormItem>
-        <Button htmlType="submit" type="primary" disabled={isSubmitting}>
-          Submit
-        </Button>
-      </FormItem>
     </Form>
   );
 };
 
 const WorkDayForm = withFormik({
-  mapPropsToValues({ username, site, workArea, team }) {
+  mapPropsToValues({ site, workArea, team }) {
     return {
-      username: username || "",
-      site: site || "",
-      workArea: workArea || "",
-      team: team || ""
+      site: site || null,
+      workArea: workArea || null,
+      team: team || null
     };
-  },
-  // validationSchema: yup.object().shape({
-  // username: yup.string().required('Username is required'),
-  // }),
-  handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
-    setTimeout(() => {
-      console.log("Form values", values);
-      // save
-      setSubmitting(false);
-    }, 2000);
   }
-})(WorkDayFormik);
+})(WorkDaySelectors);
 
-export default WorkDayForm;
+export default connect(
+  null,
+  { setSelectedTeam }
+)(WorkDayForm);

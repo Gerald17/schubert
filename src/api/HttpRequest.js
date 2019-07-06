@@ -22,7 +22,7 @@ export default class SchubertApi {
         return response;
       })
       .catch(err => {
-        return console.log(err.response);
+        throw new Error(err.response);
       });
   };
 
@@ -34,7 +34,7 @@ export default class SchubertApi {
         return response;
       })
       .catch(err => {
-        return console.log(err.response);
+        throw new Error(err.response);
       });
   };
 

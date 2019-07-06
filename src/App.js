@@ -39,7 +39,7 @@ class App extends Component {
                 <Breadcrumb.Item>List</Breadcrumb.Item>
               </Breadcrumb>
               <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>                
-                <Route exact path="/WorkDay" component={WorkDay} />
+                <Route exact path="/" component={WorkDay} />
               </div>
             </Content>
             <Footer style={{ textAlign: "center" }}>
