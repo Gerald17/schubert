@@ -38,6 +38,18 @@ export default class SchubertApi {
       });
   };
 
+  updateData = (endpoint, params) => {
+    api.defaults.headers.common["Authorization"] = this.token;
+    return api
+      .put(endpoint, params)
+      .then(response => {
+        return response;
+      })
+      .catch(err => {
+        throw new Error(err.response);
+      });
+  };
+
   //Generic request with Query string parameters
   /*
   fetchDataQS = ({ endpoint, params }) => {

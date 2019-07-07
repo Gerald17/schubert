@@ -7,8 +7,7 @@ import { Layout, Breadcrumb } from 'antd';
 
 //Components
 import SideMenu from "./components/menu/menu";
-import workers from "./components/workers/workers";
-import { menuItems } from "./components/menu/menuItems";
+import { menuComponents } from "./components/menu/menuItems";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -37,21 +36,12 @@ class App extends Component {
             <Header style={{ padding: 0 }} />
             <Content style={{ margin: "0 16px" }}>
               <Breadcrumb style={{ margin: "16px 0" }}>
-                <Breadcrumb.Item>Users</Breadcrumb.Item>
-                <Breadcrumb.Item>List</Breadcrumb.Item>
+                {/*<Breadcrumb.Item>Users</Breadcrumb.Item>*/}
               </Breadcrumb>
               <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>                
                 <Route exact path="/" component={WorkDay} />
-                { menuItems.map(menuItem => {
-                  return (
-                    menuItem.hasOwnProperty("submenu") ? 
-                    <>
-                      {menuItem.submenu.map(submenu => {
-                        return <Route path={submenu.link} component={submenu.component}/>
-                      })}
-                    </> :
-                    <Route path={menuItem.link} component={menuItem.component} />
-                    )
+                { menuComponents.map(menuComponent => {
+                    return <Route exact key={menuComponent.id} path={menuComponent.path} component={menuComponent.component}/>
                   })
                 }    
               </div>

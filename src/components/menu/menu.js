@@ -17,7 +17,6 @@ const SideMenu = () => {
         {menuItems.map(menuItem => {         
           return (
           menuItem.hasOwnProperty("submenu") ?
-              menuItem.showInMenu &&
               <SubMenu
                 key={menuItem.id}
                 title={
@@ -29,7 +28,6 @@ const SideMenu = () => {
               >
                 {menuItem.submenu.map(submenu => {
                   return (
-                      submenu.showInMenu &&
                       <Menu.Item key={submenu.id}>
                         <Link to={submenu.link}>{submenu.label}</Link>
                       </Menu.Item>
@@ -37,7 +35,6 @@ const SideMenu = () => {
                 })}
               </SubMenu>
             :
-              menuItem.showInMenu &&
               <Menu.Item key={menuItem.id}>
                 <Link to={menuItem.link}>
                   <Icon type={menuItem.icon} />

@@ -6,6 +6,7 @@ import { withFormik, Field as FormikField } from "formik";
 import { setSelectedTeam } from "../../actions/teamActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
+import { getOptions } from "../../utils/common";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -66,12 +67,6 @@ const WorkDaySelectors = ({
 
   const handleHttpError = error => {
     console.log("error", error);
-  };
-
-  const getOptions = options => {
-    return options.map(option => {
-      return { value: option.id, name: option.name };
-    });
   };
 
   const setSelectedValue = (resource, value) => {

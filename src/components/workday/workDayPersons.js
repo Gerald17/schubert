@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+
 import { Table, Divider } from "antd";
 
-import { fetchWorkers } from "../../actions/workerActions";
+import { fetchWorkersByTeam } from "../../actions/workerActions";
 
 const columns = [
   {
@@ -34,14 +35,14 @@ const columns = [
   }
 ];
 
-const WorkDayPersons = ({ selectedTeam, workers, fetchWorkers }) => {
+const WorkDayPersons = ({ selectedTeam, workers, fetchWorkersByTeam }) => {
 
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
 
   // load workers when team changes
   useEffect(() => {
     if (selectedTeam) {
-      fetchWorkers();
+      fetchWorkersByTeam(selectedTeam);
     }
   }, [selectedTeam]);
 
@@ -85,5 +86,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { fetchWorkers }
+  { fetchWorkersByTeam }
 )(WorkDayPersons);

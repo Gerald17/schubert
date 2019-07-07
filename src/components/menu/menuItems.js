@@ -7,37 +7,45 @@ export const menuItems = [
     id: 1,
     label: "Iniciar Jornada",
     icon: "pie-chart",
-    component: WorkDay,
-    showInMenu: true,
-    link: "/WorkDay"
+    link: "/workDay"
   },
   {
     id: 2,
     label: "Terminar Jornada",
     icon: "pie-chart",
-    component: null,
-    showInMenu: true,
-    link: "/WorkDay"
+    link: "/workDay"
   },
   {
     id: 3,
     label: "Catalogos",
     icon: "pie-chart",
-    component: null,
-    showInMenu: true,
     link: "#",
     submenu: [
-      { id: 31, label: "Personas", icon: "pie-chart", component: Workers, showInMenu: true, link: "/Persons" },
-      { id: 32, label: "Camiones", icon: "pie-chart", component: null, showInMenu: true, link: "/Trucks" }
+      { id: 31, label: "Personas", link: "/persons" },
+      { id: 32, label: "Camiones", link: "/trucks" }
     ]
+  }
+];
+
+export const menuComponents = [
+  {
+    id: 1,
+    component: WorkDay,
+    path: "/workDay"
   },
   {
-    id: 4,
-    label: "Editar Worker",
-    icon: "pie-chart",
-    component: EditWorker,
-    showInMenu: false,
-    link: "/Persons/edit/:id"
+    id: 2,
+    component: null,
+    path: "/trucks"
   },
-
-];
+  {
+    id: 3,
+    component: Workers,
+    path: "/persons"
+  },
+  {
+    id: 31,
+    component: EditWorker,
+    path: "/persons/edit/:workerId"
+  },
+]
