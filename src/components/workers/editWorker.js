@@ -64,7 +64,7 @@ const EditWorker = ({
 
   //const nameError = isFieldTouched("name") && getFieldError("name");
   //const nitError = isFieldTouched("nit") && getFieldError("nit");
-  const isssError = isFieldTouched("isss") && getFieldError("isss");
+  //const isssError = isFieldTouched("isss") && getFieldError("isss");
   //const workPositionError = isFieldTouched("workPosition") && getFieldError("workPosition");
   //const companyIdError = isFieldTouched("companyId") && getFieldError("companyId");
   //const workerTeamIdError = isFieldTouched("workerTeamId") && getFieldError("workerTeamId");
@@ -88,11 +88,7 @@ const EditWorker = ({
           initialValue: worker.nit
         })(<Input placeholder="NIT" />)}
       </FormItem>
-      <FormItem
-        label="ISSS"
-        validateStatus={isssError ? "error" : ""}
-        help={isssError || ""}
-      >
+      <FormItem label="ISSS" hasFeedback>
         {getFieldDecorator("isss", {
           rules: [{ required: true, message: "Escriba el número del ISSS" }],
           initialValue: worker.isss

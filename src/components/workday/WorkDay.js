@@ -5,7 +5,7 @@ import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
 
 //Ant
-import { Row, Button } from "antd";
+import { Row, Button, message } from "antd";
 
 //Custom
 import WorkDayForm from './workDaySelectors';
@@ -39,13 +39,15 @@ const WorkDay = ({
       endDate: new Date("2019/06/06"),
       detailsInitialLog: "",
       detailsEndLog: "",
-      vehicleId: "",
-      workTools: [],
+      vehicleId: "P131892",
+      //workTools: [],
       comment: "prueba journey"
     }
     request.createData(endpoints.teamJourney, journey)
     .then(response => {
-      console.log("response", response);
+      if(response.status === 200 || response.status === 201){
+        message.success("Registro creado exitosamente")
+      }
     })
     .catch(error => {
       console.log("error", error);

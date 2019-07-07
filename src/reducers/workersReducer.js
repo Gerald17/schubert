@@ -1,8 +1,9 @@
-import { FETCH_WORKERS, FETCH_WORKER } from '../actions/types';
+import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM } from '../actions/types';
 
 const initialState = {
   selectedWorker: null,
   workers: [],
+  workersByTeam: [],
   worker: {}
 }
 
@@ -17,6 +18,11 @@ export default function(state = initialState, { type, payload }){
       return {
         ...state,
         worker: payload.worker
+      }
+      case FETCH_WORKERS_BY_TEAM:
+      return {
+        ...state,
+        workersByTeam: payload.workersByTeam
       }
       default:
       return state

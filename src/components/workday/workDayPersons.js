@@ -35,7 +35,7 @@ const columns = [
   }
 ];
 
-const WorkDayPersons = ({ selectedTeam, workers, fetchWorkersByTeam }) => {
+const WorkDayPersons = ({ selectedTeam, workersByTeam, fetchWorkersByTeam }) => {
 
   // load workers when team changes
   useEffect(() => {
@@ -44,25 +44,25 @@ const WorkDayPersons = ({ selectedTeam, workers, fetchWorkersByTeam }) => {
     }
   }, [selectedTeam]);
 
-  const workersKey = workers.map(workers => {
+  const workers = workersByTeam.map(workerByTeam => {
     //neccesary to remove warning from antd (every row should have a unique key)
-    workers.key = workers.id;
-    return workers;
+    workerByTeam.key = workerByTeam.id;
+    return workerByTeam;
   })
 
   return (
     <>
-      { workersKey.length > 0 && <Table columns={columns} dataSource={workersKey} /> }
+      { workers.length > 0 && <Table columns={columns} dataSource={workers} /> }
     </>
   );
 };
 
 const mapStateToProps = state => {
   const selectedTeam = state.teamsInfo.selectedTeam;
-  const workers = state.workersInfo.workers;
+  const workersByTeam = state.workersInfo.workersByTeam;
   return {
     selectedTeam,
-    workers
+    workersByTeam
   };
 };
 
