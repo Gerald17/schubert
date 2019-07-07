@@ -37,8 +37,6 @@ const columns = [
 
 const WorkDayPersons = ({ selectedTeam, workers, fetchWorkersByTeam }) => {
 
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
-
   // load workers when team changes
   useEffect(() => {
     if (selectedTeam) {
@@ -51,26 +49,10 @@ const WorkDayPersons = ({ selectedTeam, workers, fetchWorkersByTeam }) => {
     workers.key = workers.id;
     return workers;
   })
-  
-  const onSelectChange = selectedRowKeys => {
-    setSelectedRowKeys(selectedRowKeys)
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const hasSelected = selectedRowKeys.length > 0;
 
   return (
     <>
-      { workersKey.length > 0 && 
-        <>
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-          <Table rowSelection={rowSelection} columns={columns} dataSource={workersKey} /> 
-        </>
-      }
+      { workersKey.length > 0 && <Table columns={columns} dataSource={workersKey} /> }
     </>
   );
 };

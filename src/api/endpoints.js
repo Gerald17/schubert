@@ -4,5 +4,6 @@ export const endpoints = {
   team: "api/team",
   worker: "api/worker",
   workPosition: "api/workPosition",
-  companies: "api/company"
+  companies: "api/company",
+  teamJourney: "api/TeamJourney"
 };

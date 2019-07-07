@@ -1,6 +1,7 @@
 import WorkDay from '../workday/WorkDay';
 import Workers from '../../components/workers/workers';
 import EditWorker from '../../components/workers/editWorker';
+import CreateWorker from '../../components/workers/createWorker';
 
 export const menuItems = [
   {
@@ -47,5 +48,10 @@ export const menuComponents = [
     id: 31,
     component: EditWorker,
     path: "/persons/edit/:workerId"
+  },
+  {
+    id: 32,
+    component: CreateWorker,
+    path: "/persons/create"
   },
 ]

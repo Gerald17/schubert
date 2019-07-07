@@ -1,4 +1,5 @@
 import axios from "axios";
+import { message } from "antd";
 
 const baseURL = process.env.REACT_APP_API_URL;
 
@@ -21,20 +22,20 @@ export default class SchubertApi {
       .then(response => {
         return response;
       })
-      .catch(err => {
-        throw new Error(err.response);
+      .catch(errors => {
+        this.handleHttpErros(errors.response)
       });
   };
 
-  createData = ({ endpoint, params }) => {
+  createData = (endpoint, params) => {
     api.defaults.headers.common["Authorization"] = this.token;
     return api
       .post(endpoint, params)
       .then(response => {
         return response;
       })
-      .catch(err => {
-        throw new Error(err.response);
+      .catch(errors => {
+        this.handleHttpErros(errors.response)
       });
   };
 
@@ -45,10 +46,21 @@ export default class SchubertApi {
       .then(response => {
         return response;
       })
-      .catch(err => {
-        throw new Error(err.response);
+      .catch(errors => {
+        this.handleHttpErros(errors.response)
       });
   };
+
+  handleHttpErros = (errors) => {
+    switch(errors.status){
+      case 400:
+      case 500:
+        message.error("Hubo un error y no se completo la solicitud");
+      break;
+      default:
+        message.warning("Sucedió un error desconocido y no se completo la solicitud")
+    }
+  }
 
   //Generic request with Query string parameters
   /*

@@ -51,6 +51,7 @@ const Workers = ({ workers, fetchWorkers, match: { path } }) => {
 
   return (
     <>
+      <Link to={`${path}/create`}>Crear</Link>
       { workersKey.length > 0 && <Table columns={columns} dataSource={workersKey} /> }
     </>
   );
