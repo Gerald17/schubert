@@ -25,23 +25,22 @@ const WorkDay = ({
       return {
         workerId: worker.id,
         startDate: journeyCreateDate,
-        endDate: null,
+        endDate: journeyCreateDate,
         comment: "",
-        status: ""
+        status: "TRABAJADO" //
       }
     });
     const journey = {
       workers,
-      workerTeamId: selectedTeam,
-      receivedVehicleStatus: "Limpio",
-      returnedVehicleStatus: "",
       startDate: journeyCreateDate,
-      endDate: null,
-      detailsInitialLog: "",
-      detailsEndLog: "",
+      endDate: journeyCreateDate,
+      detailsInitialLog: "comentarion initial log",
       vehicleId: "P131892",
+      receivedVehicleStatus: "Limpio",
+      workerTeamId: selectedTeam,
+      returnedVehicleStatus: "",
       workTools: [],
-      comment: ""
+      comment: "Journey abierto"
     }
     request.createData(endpoints.teamJourney, journey)
     .then(response => {

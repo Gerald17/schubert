@@ -27,17 +27,17 @@ export const replaceWorkers = (
   newWorker,
   currentWorkers
 ) => async dispatch => {
-  console.log("begin", currentWorkers);
-  const index = currentWorkers.findIndex(worker => worker.id === oldWorker);
   let updatedWorkers = [];
+  updatedWorkers = currentWorkers.filter(worker => worker.id !== oldWorker);
   const getWorkerInfo = await request
     .fetchData(`${endpoints.worker}/${newWorker}`)
     .then(response => {
-      currentWorkers.splice(index, 1, response.data);
-      updatedWorkers = currentWorkers;
-      return updatedWorkers;
+      return response.data;
+    })
+    .then(data => {
+      return updatedWorkers.push(data);
     });
-    console.log("updaaa", updatedWorkers);
+
   dispatch({
     type: UPDATE_REPLACED_WORKERS,
     payload: {
