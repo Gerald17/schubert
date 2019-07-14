@@ -57,6 +57,9 @@ export default class SchubertApi {
       case 500:
         message.error("Hubo un error y no se completo la solicitud");
       break;
+      case 404:
+        message.error("No se encontraron datos");
+      break;
       default:
         message.warning("Sucedió un error desconocido y no se completo la solicitud")
     }

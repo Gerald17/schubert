@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Select, Form } from "antd";
+import { Select, Form, DatePicker } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
 import { setSelectedTeam } from "../../actions/teamActions";
+import { setJourneyCreateDate } from "../../actions/journeyActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
-import { getOptions } from "../../utils/common";
+import { getOptions, dateFormat, formatDateYYYYMMDD } from "../../utils/common";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -17,13 +18,14 @@ const WorkDaySelectors = ({
   values,
   setFieldTouched,
   setFieldValue,
-  handleSubmit,
-  setSelectedTeam
+  setSelectedTeam,
+  setJourneyCreateDate
 }) => {
   // define state for selects
   const [siteDepartments, setSiteDepartments] = useState([]);
   const [workAreas, setWorkAreas] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [showSelectors, setShowSelectors] = useState(false);
 
   useEffect(() => {
     loadWorkAreas();
@@ -78,81 +80,104 @@ const WorkDaySelectors = ({
     setSelectedTeam(value);
   };
 
+  const onChangeDate = value => {
+    setJourneyCreateDate(formatDateYYYYMMDD(value));
+    setSelectedValue("date", value);
+    setShowSelectors(true);
+  }
+
   return (
-    <Form onSubmit={handleSubmit} layout="inline">
-      <FormItem label="Seleccione el departamento">
-        <FormikField
-          name="site"
-          render={({ field }) => (
-            <Select
-              {...field}
-              onChange={value => setSelectedValue("site", value)}
-              onBlur={() => setFieldTouched("site", true)}
-              value={values.site}
-              style={{ width: "200px" }}
-            >
-              {siteDepartments.map(option => {
-                return (
-                  <Option key={option.value} value={option.value}>
-                    {option.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          )}
-        />
-      </FormItem>
-      <FormItem label="Seleccione el área">
-        <FormikField
-          name="workArea"
-          render={({ field }) => (
-            <Select
-              {...field}
-              onChange={value => setSelectedValue("workArea", value)}
-              onBlur={() => setFieldTouched("workArea", true)}
-              value={values.workArea}
-              style={{ width: "200px" }}
-            >
-              {workAreas.map(option => {
-                return (
-                  <Option key={option.value} value={option.value}>
-                    {option.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          )}
-        />
-      </FormItem>
-      <FormItem label="Seleccione el equipo">
-        <FormikField
-          name="team"
-          render={({ field }) => (
-            <Select
-              {...field}
-              onChange={value => sendTeamToStore(value)}
-              onBlur={() => setFieldTouched("team", true)}
-              value={values.team}
-              style={{ width: "200px" }}
-            >
-              {teams.map(option => {
-                return (
-                  <Option key={option.value} value={option.value}>
-                    {option.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          )}
-        />
-      </FormItem>
+    <>
+    <FormItem label="Seleccione la fecha">
+      <FormikField
+        name="date"
+        render={({ field }) => (
+          <DatePicker
+            onChange={value => onChangeDate(value)}
+            format={dateFormat}/>
+        )}
+      />
+    </FormItem>
+    <Form layout="inline">
+      { showSelectors && 
+        <>
+          <FormItem label="Seleccione el departamento">
+            <FormikField
+              name="site"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onChange={value => setSelectedValue("site", value)}
+                  onBlur={() => setFieldTouched("site", true)}
+                  value={values.site}
+                  style={{ width: "200px" }}
+                >
+                  {siteDepartments.map(option => {
+                    return (
+                      <Option key={option.value} value={option.value}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            />
+          </FormItem>
+          <FormItem label="Seleccione el área">
+            <FormikField
+              name="workArea"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onChange={value => setSelectedValue("workArea", value)}
+                  onBlur={() => setFieldTouched("workArea", true)}
+                  value={values.workArea}
+                  style={{ width: "200px" }}
+                >
+                  {workAreas.map(option => {
+                    return (
+                      <Option key={option.value} value={option.value}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            />
+          </FormItem>
+          <FormItem label="Seleccione el equipo">
+            <FormikField
+              name="team"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onChange={value => sendTeamToStore(value)}
+                  onBlur={() => setFieldTouched("team", true)}
+                  value={values.team}
+                  style={{ width: "200px" }}
+                >
+                  {teams.map(option => {
+                    return (
+                      <Option key={option.value} value={option.value}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            />
+          </FormItem>
+        </>
+      }
     </Form>
+    </>
   );
 };
 
 const WorkDayForm = withFormik({
-  mapPropsToValues({ site, workArea, team }) {
+  mapPropsToValues({ site, workArea, team, date }) {
     return {
+      date: date || null,
       site: site || null,
       workArea: workArea || null,
       team: team || null
@@ -162,5 +187,5 @@ const WorkDayForm = withFormik({
 
 export default connect(
   null,
-  { setSelectedTeam }
+  { setSelectedTeam, setJourneyCreateDate }
 )(WorkDayForm);

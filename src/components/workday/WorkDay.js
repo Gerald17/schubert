@@ -8,7 +8,7 @@ import { endpoints } from "../../api/endpoints";
 import { Row, Button, message } from "antd";
 
 //Custom
-import WorkDayForm from './workDaySelectors';
+import WorkDaySelectors from './workDaySelectors';
 import WorkDayPersons from "./workDayPersons";
 
 const request = new HttpRequest();
@@ -32,7 +32,6 @@ const WorkDay = ({
     const journey = {
       workers,
       workerTeamId: selectedTeam,
-      vehicleId: "",
       receivedVehicleStatus: "Limpio",
       returnedVehicleStatus: "Limpio",
       startDate: new Date("2019/06/06"),
@@ -40,7 +39,7 @@ const WorkDay = ({
       detailsInitialLog: "",
       detailsEndLog: "",
       vehicleId: "P131892",
-      //workTools: [],
+      workTools: [],
       comment: "prueba journey"
     }
     request.createData(endpoints.teamJourney, journey)
@@ -58,7 +57,7 @@ const WorkDay = ({
     <>
       <h1>Crear Jornada</h1>
       <Row>
-        <WorkDayForm/>
+        <WorkDaySelectors/>
         <WorkDayPersons/>
         <Button
           type="primary"
@@ -73,7 +72,7 @@ const WorkDay = ({
 };
 
 const mapStateToProps = (state) => {
-  const workersTeam = state.workersInfo.workers;
+  const workersTeam = state.workersInfo.workersByTeam;
   const selectedTeam = state.teamsInfo.selectedTeam;
   return {
     selectedTeam,

@@ -1,41 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Table, Divider, Drawer, Select, Button, Form, message, Input } from "antd";
 
-import { Table, Divider } from "antd";
 
+import HttpRequest from "../../api/HttpRequest";
+import { endpoints } from "../../api/endpoints";
 import { fetchWorkersByTeam } from "../../actions/workerActions";
 
-const columns = [
-  {
-    title: "Nombre",
-    dataIndex: "name",
-    key: "name"
-  },
-  {
-    title: "Cargo",
-    dataIndex: "workPosition",
-    key: "workPosition",
-    render: workPosition => workPosition.name
-  },
-  {
-    title: "Empresa",
-    dataIndex: "companyId",
-    key: "companyId"
-  },
-  { 
-    title: 'Acción',
-    key: 'action',
-    render: () => (
-      <span>
-        <button>Cambiar</button>
-        <Divider type="vertical" />
-        <button>Reportar</button>
-      </span>
-    )
-  }
-];
+const request = new HttpRequest();
+const FormItem = Form.Item;
+const Option = Select.Option;
+const { TextArea } = Input;
 
-const WorkDayPersons = ({ selectedTeam, workersByTeam, fetchWorkersByTeam }) => {
+const WorkDayPersons = ({
+  selectedTeam,
+  workersByTeam,
+  journeyCreateDate,
+  fetchWorkersByTeam,
+  form: { getFieldDecorator, getFieldsError, validateFields }
+}) => {
+  const columns = [
+    {
+      title: "Nombre",
+      dataIndex: "name",
+      key: "name"
+    },
+    {
+      title: "Cargo",
+      dataIndex: "workPosition",
+      key: "workPosition",
+      render: workPosition => workPosition.name
+    },
+    {
+      title: "Empresa",
+      dataIndex: "companyId",
+      key: "companyId"
+    },
+    {
+      title: "Acción",
+      key: "action",
+      render: ({ id }) => (
+        <span>
+          <Button onClick={() => handleDrawerStatus(id)}>Cambiar</Button>
+          <Divider type="vertical" />
+          <Button>Reportar</Button>
+        </span>
+      )
+    }
+  ];
+
+  const [drawerStatus, setDrawerStatus] = useState(false);
+  const [availableWorkers, setAvailableWorkers] = useState([]);
+  const [workerToChange, setWorkerToChange] = useState([]);
+
+  const hasErrors = fieldsError => {
+    return Object.keys(fieldsError).some(field => fieldsError[field]);
+  };
 
   // load workers when team changes
   useEffect(() => {
@@ -44,29 +64,125 @@ const WorkDayPersons = ({ selectedTeam, workersByTeam, fetchWorkersByTeam }) => 
     }
   }, [selectedTeam]);
 
+  const handleDrawerStatus = workerToSubstituteId => {
+    if (!drawerStatus) {
+      request
+        .fetchData(
+          `/api/Worker/${workerToSubstituteId}/substitute-avaiable/${journeyCreateDate}`,
+          null
+        )
+        .then(allAvailableWorkers => {
+          return allAvailableWorkers.data;
+        })
+        .then(substituteWorkers => {
+          let newAvailableWorkers = [];
+          if (typeof substituteWorkers === "object") {
+            newAvailableWorkers.push(substituteWorkers);
+          } else {
+            newAvailableWorkers = substituteWorkers;
+          }
+          setWorkerToChange(workerToSubstituteId);
+          setAvailableWorkers(newAvailableWorkers);
+          setDrawerStatus(!drawerStatus);
+        });
+    }
+    return setDrawerStatus(!drawerStatus);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    validateFields((err, values) => {
+      if (!err) {
+        request.createData(`/api/Worker/${workerToChange}/substitute/${values.substitute}`, values)
+        .then(response => {
+          setDrawerStatus(!drawerStatus);
+          if(response.status === 200 || response.status === 204 || response.status === 201){
+            message.success("Cambios realizados exitosamente")
+          }
+        })
+        .catch( error => {
+          console.log("error", error);
+        });
+      };
+    });
+  };
+
   const workers = workersByTeam.map(workerByTeam => {
     //neccesary to remove warning from antd (every row should have a unique key)
     workerByTeam.key = workerByTeam.id;
     return workerByTeam;
-  })
-
+  });
   return (
     <>
-      { workers.length > 0 && <Table columns={columns} dataSource={workers} /> }
+      {workers.length > 0 && <Table columns={columns} dataSource={workers} />}
+      <Drawer
+        title="Seleccione una persona para realizar el cambio"
+        placement="bottom"
+        closable={true}
+        onClose={handleDrawerStatus}
+        visible={drawerStatus}
+        destroyOnClose={true}
+        height={400}
+      >
+        {availableWorkers.length > 0 ? (
+          <Form onSubmit={handleSubmit} layout="vertical">
+            <FormItem label="Sustituto" hasFeedback>
+              {getFieldDecorator("substitute", {
+                rules: [{ required: true, message: "Seleccione el sustituto" }]
+              })(
+                <Select style={{ width: "100%" }}>
+                  {availableWorkers.map(option => {
+                    return (
+                      <Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem label="Observaciones" hasFeedback>
+              {getFieldDecorator("comments", {
+                rules: [{ required: false }]
+              })(
+                <TextArea style={{ width: "100%" }} rows={4}/>
+              )}
+            </FormItem>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={hasErrors(getFieldsError())}
+              >
+                Confirmar
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : (
+          <p>No se encontraron empleados disponibles</p>
+        )}
+      </Drawer>
     </>
   );
 };
 
+
 const mapStateToProps = state => {
   const selectedTeam = state.teamsInfo.selectedTeam;
   const workersByTeam = state.workersInfo.workersByTeam;
+  const journeyCreateDate = state.journeyInfo.journeyCreateDate;
   return {
     selectedTeam,
-    workersByTeam
+    workersByTeam,
+    journeyCreateDate
   };
 };
+
+const EnhancedSubstitutionForm = Form.create({ name: "worker_substitution" })(
+  WorkDayPersons
+);
 
 export default connect(
   mapStateToProps,
   { fetchWorkersByTeam }
-)(WorkDayPersons);
+)(EnhancedSubstitutionForm);
