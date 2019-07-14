@@ -1,6 +1,7 @@
 // TEAM
 export const SET_SELECTED_TEAM = "SET_SELECTED_TEAM";
 export const FETCH_TEAMS = "FETCH_TEAMS";
+export const SAVE_TEAMS_TO_STORE = "SAVE_TEAMS_TO_STORE";
 
 // WORKERS
 export const FETCH_WORKERS = "FETCH_WORKERS";

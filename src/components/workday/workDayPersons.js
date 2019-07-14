@@ -61,7 +61,7 @@ const WorkDayPersons = ({
   // load workers when team changes
   useEffect(() => {
     if (selectedTeam) {
-      fetchWorkersByTeam(selectedTeam);
+      fetchWorkersByTeam(selectedTeam, journeyCreateDate);
     }
   }, [selectedTeam]);
 

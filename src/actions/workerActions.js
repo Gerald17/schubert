@@ -11,9 +11,9 @@ import { endpoints } from "../api/endpoints";
 
 const request = new HttpRequest();
 
-export const fetchWorkersByTeam = selectedTeam => async dispatch => {
+export const fetchWorkersByTeam = (selectedTeam, journeyCreateDate) => async dispatch => {
   const workersByTeam = await request
-    .fetchData(`${endpoints.worker}?Filters=team==${selectedTeam}`)
+    .fetchData(`${endpoints.worker}?Filters=team==${selectedTeam}&date=${journeyCreateDate}`)
     .then(response => response.data);
   dispatch({
     type: FETCH_WORKERS_BY_TEAM,

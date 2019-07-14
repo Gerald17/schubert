@@ -1,9 +1,10 @@
-import { SET_SELECTED_TEAM, FETCH_TEAMS } from "../actions/types";
+import { SET_SELECTED_TEAM, FETCH_TEAMS, SAVE_TEAMS_TO_STORE } from "../actions/types";
 
 const initialState = {
   selectedTeam: null,
   teams: [],
-  teamDefaultCar: null
+  teamDefaultCar: null,
+  teamsData: []
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -18,6 +19,11 @@ export default function(state = initialState, { type, payload }) {
         ...state,
         teams: payload.teams
       };
+    case SAVE_TEAMS_TO_STORE:
+      return {
+        ...state,
+        teamsData: payload.teams
+      }
     default:
       return state;
   }

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Select, Form, DatePicker } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
-import { setSelectedTeam } from "../../actions/teamActions";
+import { setSelectedTeam, saveTeamsToStore } from "../../actions/teamActions";
 import { setJourneyCreateDate } from "../../actions/journeyActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
@@ -19,6 +19,7 @@ const WorkDaySelectors = ({
   setFieldTouched,
   setFieldValue,
   setSelectedTeam,
+  saveTeamsToStore,
   setJourneyCreateDate,
   journeyCreateDate
 }) => {
@@ -63,7 +64,10 @@ const WorkDaySelectors = ({
       {}
     );
     requestTeams
-      .then(teams => getOptions(teams.data))
+      .then(teams => {
+        saveTeamsToStore(teams.data);
+        return getOptions(teams.data)
+      })
       .then(options => setTeams(options))
       .catch(error => console.log(error));
   };
@@ -201,5 +205,5 @@ const WorkDayForm = withFormik({
 
 export default connect(
   mapStateToProps,
-  { setSelectedTeam, setJourneyCreateDate }
+  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore }
 )(WorkDayForm);
