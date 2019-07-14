@@ -15,7 +15,8 @@ const request = new HttpRequest();
 
 const WorkDay = ({
   selectedTeam, 
-  workersTeam
+  workersTeam,
+  journeyCreateDate
 }) => {
 
   const submitTeamJourney = () => {
@@ -23,24 +24,24 @@ const WorkDay = ({
     const workers = workersTeam.map(worker => {
       return {
         workerId: worker.id,
-        startDate: new Date("2019/06/06"),
-        endDate: new Date("2019/06/06"),
+        startDate: journeyCreateDate,
+        endDate: null,
         comment: "",
-        status: "TRABAJADO"
+        status: ""
       }
     });
     const journey = {
       workers,
       workerTeamId: selectedTeam,
       receivedVehicleStatus: "Limpio",
-      returnedVehicleStatus: "Limpio",
-      startDate: new Date("2019/06/06"),
-      endDate: new Date("2019/06/06"),
+      returnedVehicleStatus: "",
+      startDate: journeyCreateDate,
+      endDate: null,
       detailsInitialLog: "",
       detailsEndLog: "",
       vehicleId: "P131892",
       workTools: [],
-      comment: "prueba journey"
+      comment: ""
     }
     request.createData(endpoints.teamJourney, journey)
     .then(response => {
@@ -74,9 +75,11 @@ const WorkDay = ({
 const mapStateToProps = (state) => {
   const workersTeam = state.workersInfo.workersByTeam;
   const selectedTeam = state.teamsInfo.selectedTeam;
+  const journeyCreateDate = state.journeyInfo.journeyCreateDate;
   return {
     selectedTeam,
-    workersTeam
+    workersTeam,
+    journeyCreateDate
   }
 }
 

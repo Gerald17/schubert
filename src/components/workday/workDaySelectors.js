@@ -19,7 +19,8 @@ const WorkDaySelectors = ({
   setFieldTouched,
   setFieldValue,
   setSelectedTeam,
-  setJourneyCreateDate
+  setJourneyCreateDate,
+  journeyCreateDate
 }) => {
   // define state for selects
   const [siteDepartments, setSiteDepartments] = useState([]);
@@ -56,9 +57,9 @@ const WorkDaySelectors = ({
 
   const loadTeams = () => {
     const requestTeams = request.fetchData(
-      `${endpoints.team}?Filters=site==${values.site},workarea==${
+      `${endpoints.team}?Filters=site==${values.site}&workarea==${
         values.workArea
-      }`,
+      }&date=${journeyCreateDate}`,
       {}
     );
     requestTeams
@@ -174,6 +175,14 @@ const WorkDaySelectors = ({
   );
 };
 
+
+const mapStateToProps = state => {
+  const journeyCreateDate = state.journeyInfo.journeyCreateDate;
+  return {
+    journeyCreateDate
+  };
+};
+
 const WorkDayForm = withFormik({
   mapPropsToValues({ site, workArea, team, date }) {
     return {
@@ -186,6 +195,6 @@ const WorkDayForm = withFormik({
 })(WorkDaySelectors);
 
 export default connect(
-  null,
+  mapStateToProps,
   { setSelectedTeam, setJourneyCreateDate }
 )(WorkDayForm);

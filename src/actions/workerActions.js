@@ -1,11 +1,16 @@
-import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM, UPDATE_REPLACED_WORKERS } from "../actions/types";
+import {
+  FETCH_WORKERS,
+  FETCH_WORKER,
+  FETCH_WORKERS_BY_TEAM,
+  UPDATE_REPLACED_WORKERS
+} from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
 import { endpoints } from "../api/endpoints";
 
 const request = new HttpRequest();
 
-export const fetchWorkersByTeam = (selectedTeam) => async dispatch => {
+export const fetchWorkersByTeam = selectedTeam => async dispatch => {
   const workersByTeam = await request
     .fetchData(`${endpoints.worker}?Filters=team==${selectedTeam}`)
     .then(response => response.data);
@@ -17,18 +22,22 @@ export const fetchWorkersByTeam = (selectedTeam) => async dispatch => {
   });
 };
 
-export const replaceWorkers = (oldWorker, newWorker, currentWorkers) => async dispatch => {
+export const replaceWorkers = (
+  oldWorker,
+  newWorker,
+  currentWorkers
+) => async dispatch => {
+  console.log("begin", currentWorkers);
+  const index = currentWorkers.findIndex(worker => worker.id === oldWorker);
   let updatedWorkers = [];
-  updatedWorkers = currentWorkers.filter(worker => worker.id !== oldWorker);
   const getWorkerInfo = await request
-  .fetchData(`${endpoints.worker}/${newWorker}`)
-  .then(response => {
-    return response.data; 
-  })
-  .then(data => {
-    return updatedWorkers.push(data);
-  })
-  
+    .fetchData(`${endpoints.worker}/${newWorker}`)
+    .then(response => {
+      currentWorkers.splice(index, 1, response.data);
+      updatedWorkers = currentWorkers;
+      return updatedWorkers;
+    });
+    console.log("updaaa", updatedWorkers);
   dispatch({
     type: UPDATE_REPLACED_WORKERS,
     payload: {
@@ -36,7 +45,6 @@ export const replaceWorkers = (oldWorker, newWorker, currentWorkers) => async di
     }
   });
 };
-
 
 export const fetchWorkers = () => async dispatch => {
   const workers = await request
@@ -50,7 +58,7 @@ export const fetchWorkers = () => async dispatch => {
   });
 };
 
-export const fetchSingleWorker = (workerId) => async dispatch => {
+export const fetchSingleWorker = workerId => async dispatch => {
   const worker = await request
     .fetchData(`${endpoints.worker}/${workerId}`)
     .then(response => response.data);
@@ -59,5 +67,5 @@ export const fetchSingleWorker = (workerId) => async dispatch => {
     payload: {
       worker
     }
-  })
-}
+  });
+};
