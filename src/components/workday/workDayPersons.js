@@ -5,7 +5,7 @@ import { Table, Divider, Drawer, Select, Button, Form, message, Input } from "an
 
 import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
-import { fetchWorkersByTeam } from "../../actions/workerActions";
+import { fetchWorkersByTeam, replaceWorkers } from "../../actions/workerActions";
 
 const request = new HttpRequest();
 const FormItem = Form.Item;
@@ -17,6 +17,7 @@ const WorkDayPersons = ({
   workersByTeam,
   journeyCreateDate,
   fetchWorkersByTeam,
+  replaceWorkers,
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
   const columns = [
@@ -75,34 +76,20 @@ const WorkDayPersons = ({
           return allAvailableWorkers.data;
         })
         .then(substituteWorkers => {
-          let newAvailableWorkers = [];
-          if (typeof substituteWorkers === "object") {
-            newAvailableWorkers.push(substituteWorkers);
-          } else {
-            newAvailableWorkers = substituteWorkers;
-          }
           setWorkerToChange(workerToSubstituteId);
-          setAvailableWorkers(newAvailableWorkers);
+          setAvailableWorkers(substituteWorkers);
           setDrawerStatus(!drawerStatus);
         });
     }
-    return setDrawerStatus(!drawerStatus);
+    setDrawerStatus(!drawerStatus);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
-        request.createData(`/api/Worker/${workerToChange}/substitute/${values.substitute}`, values)
-        .then(response => {
-          setDrawerStatus(!drawerStatus);
-          if(response.status === 200 || response.status === 204 || response.status === 201){
-            message.success("Cambios realizados exitosamente")
-          }
-        })
-        .catch( error => {
-          console.log("error", error);
-        });
+        replaceWorkers(workerToChange, values.substitute, workersByTeam);
+        setDrawerStatus(!drawerStatus);
       };
     });
   };
@@ -184,5 +171,5 @@ const EnhancedSubstitutionForm = Form.create({ name: "worker_substitution" })(
 
 export default connect(
   mapStateToProps,
-  { fetchWorkersByTeam }
+  { fetchWorkersByTeam, replaceWorkers }
 )(EnhancedSubstitutionForm);

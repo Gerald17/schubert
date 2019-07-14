@@ -1,4 +1,4 @@
-import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM } from '../actions/types';
+import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM, UPDATE_REPLACED_WORKERS } from '../actions/types';
 
 const initialState = {
   selectedWorker: null,
@@ -24,6 +24,11 @@ export default function(state = initialState, { type, payload }){
         ...state,
         workersByTeam: payload.workersByTeam
       }
+      case UPDATE_REPLACED_WORKERS:
+        return {
+          ...state,
+          workersByTeam: payload.updatedWorkers
+        }
       default:
       return state
   }

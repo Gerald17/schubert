@@ -1,4 +1,4 @@
-import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM } from "../actions/types";
+import { FETCH_WORKERS, FETCH_WORKER, FETCH_WORKERS_BY_TEAM, UPDATE_REPLACED_WORKERS } from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
 import { endpoints } from "../api/endpoints";
@@ -16,6 +16,27 @@ export const fetchWorkersByTeam = (selectedTeam) => async dispatch => {
     }
   });
 };
+
+export const replaceWorkers = (oldWorker, newWorker, currentWorkers) => async dispatch => {
+  let updatedWorkers = [];
+  updatedWorkers = currentWorkers.filter(worker => worker.id !== oldWorker);
+  const getWorkerInfo = await request
+  .fetchData(`${endpoints.worker}/${newWorker}`)
+  .then(response => {
+    return response.data; 
+  })
+  .then(data => {
+    return updatedWorkers.push(data);
+  })
+  
+  dispatch({
+    type: UPDATE_REPLACED_WORKERS,
+    payload: {
+      updatedWorkers
+    }
+  });
+};
+
 
 export const fetchWorkers = () => async dispatch => {
   const workers = await request
