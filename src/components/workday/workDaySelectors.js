@@ -84,7 +84,12 @@ const WorkDaySelectors = ({
   const onChangeDate = value => {
     setJourneyCreateDate(formatDateYYYYMMDD(value));
     setSelectedValue("date", value);
-    setShowSelectors(true);
+    if(!value){
+      setSelectedValue("workArea", null);
+      setSelectedValue("site", null);
+      setSelectedValue("team", null);
+    }
+    setShowSelectors(!showSelectors);
   }
 
   return (

@@ -10,13 +10,15 @@ import { Row, Button, message } from "antd";
 //Custom
 import WorkDaySelectors from './workDaySelectors';
 import WorkDayPersons from "./workDayPersons";
+import WorkDayCar from "./workDayCar";
 
 const request = new HttpRequest();
 
 const WorkDay = ({
   selectedTeam, 
   workersTeam,
-  journeyCreateDate
+  journeyCreateDate,
+  substitutesInfo
 }) => {
 
   const submitTeamJourney = () => {
@@ -39,13 +41,26 @@ const WorkDay = ({
       receivedVehicleStatus: "Limpio",
       workerTeamId: selectedTeam,
       returnedVehicleStatus: "",
-      workTools: [],
-      comment: "Journey abierto"
+      workTools: []
     }
     request.createData(endpoints.teamJourney, journey)
     .then(response => {
       if(response.status === 200 || response.status === 201){
-        message.success("Registro creado exitosamente")
+        message.success("Registro creado exitosamente");
+        const substitutesRequest = substitutesInfo.map(substitute => {
+          return {
+            url: `/api/worker/${substitute.oldWorkerId}/substitute/${substitute.newWorkerId}`,
+            params: {
+              journey: journeyCreateDate,
+              comments: substitute.comment,
+              teamJourneyId: response.data.id,
+              dateAssigned: journeyCreateDate
+            } 
+          }
+        });
+        Promise.all(substitutesRequest.map(substitute => request.createData(substitute.url, substitute.params)))
+        .then(values => console.log("values", values))
+        .catch(errors => console.log("errors", errors))
       }
     })
     .catch(error => {
@@ -59,6 +74,7 @@ const WorkDay = ({
       <Row>
         <WorkDaySelectors/>
         <WorkDayPersons/>
+        <WorkDayCar/>
         <Button
           type="primary"
           htmlType="submit"
@@ -73,12 +89,14 @@ const WorkDay = ({
 
 const mapStateToProps = (state) => {
   const workersTeam = state.workersInfo.workersByTeam;
+  const substitutesInfo = state.workersInfo.substitutesInfo;
   const selectedTeam = state.teamsInfo.selectedTeam;
   const journeyCreateDate = state.journeyInfo.journeyCreateDate;
   return {
     selectedTeam,
     workersTeam,
-    journeyCreateDate
+    journeyCreateDate,
+    substitutesInfo
   }
 }
 

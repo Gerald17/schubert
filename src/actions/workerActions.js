@@ -2,7 +2,8 @@ import {
   FETCH_WORKERS,
   FETCH_WORKER,
   FETCH_WORKERS_BY_TEAM,
-  UPDATE_REPLACED_WORKERS
+  UPDATE_REPLACED_WORKERS,
+  SET_SUBSTITUTE_INFO
 } from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
@@ -45,6 +46,23 @@ export const replaceWorkers = (
     }
   });
 };
+
+export const setSubstituteInfo = (oldWorker, newWorkerInfo) => {  
+  const substituteInfo = {
+    oldWorkerId: oldWorker,
+    newWorkerId: newWorkerInfo.substitute,
+    comment: newWorkerInfo.comments
+  }
+  return (dispatch) => {
+    dispatch({
+      type: SET_SUBSTITUTE_INFO,
+      payload: {
+        substituteInfo
+      }
+    });
+  };
+}
+
 
 export const fetchWorkers = () => async dispatch => {
   const workers = await request

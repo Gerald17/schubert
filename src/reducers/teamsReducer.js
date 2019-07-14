@@ -2,7 +2,8 @@ import { SET_SELECTED_TEAM, FETCH_TEAMS } from "../actions/types";
 
 const initialState = {
   selectedTeam: null,
-  teams: []
+  teams: [],
+  teamDefaultCar: null
 };
 
 export default function(state = initialState, { type, payload }) {

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Table, Divider, Drawer, Select, Button, Form, message, Input } from "antd";
+import { Table, Divider, Drawer, Select, Button, Form, Input } from "antd";
 
 
 import HttpRequest from "../../api/HttpRequest";
-import { endpoints } from "../../api/endpoints";
-import { fetchWorkersByTeam, replaceWorkers } from "../../actions/workerActions";
+import { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo } from "../../actions/workerActions";
 
 const request = new HttpRequest();
 const FormItem = Form.Item;
@@ -18,6 +17,7 @@ const WorkDayPersons = ({
   journeyCreateDate,
   fetchWorkersByTeam,
   replaceWorkers,
+  setSubstituteInfo,
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
   const columns = [
@@ -89,6 +89,7 @@ const WorkDayPersons = ({
     validateFields((err, values) => {
       if (!err) {
         replaceWorkers(workerToChange, values.substitute, workersByTeam);
+        setSubstituteInfo(workerToChange, values);
         setDrawerStatus(!drawerStatus);
       };
     });
@@ -171,5 +172,5 @@ const EnhancedSubstitutionForm = Form.create({ name: "worker_substitution" })(
 
 export default connect(
   mapStateToProps,
-  { fetchWorkersByTeam, replaceWorkers }
+  { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo }
 )(EnhancedSubstitutionForm);
