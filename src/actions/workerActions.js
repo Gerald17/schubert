@@ -3,7 +3,8 @@ import {
   FETCH_WORKER,
   FETCH_WORKERS_BY_TEAM,
   UPDATE_REPLACED_WORKERS,
-  SET_SUBSTITUTE_INFO
+  SET_SUBSTITUTE_INFO,
+  SET_WORKER_REPORTED_INFO
 } from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
@@ -63,7 +64,6 @@ export const setSubstituteInfo = (oldWorker, newWorkerInfo) => {
   };
 }
 
-
 export const fetchWorkers = () => async dispatch => {
   const workers = await request
     .fetchData(endpoints.worker)
@@ -87,3 +87,14 @@ export const fetchSingleWorker = workerId => async dispatch => {
     }
   });
 };
+
+export const setReportWorkerInfo = workerReportedInfo => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_WORKER_REPORTED_INFO,
+      payload: {
+        workerReportedInfo
+      }
+    });
+  };
+}

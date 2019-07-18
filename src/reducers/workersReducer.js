@@ -3,7 +3,8 @@ import {
   FETCH_WORKER,
   FETCH_WORKERS_BY_TEAM,
   UPDATE_REPLACED_WORKERS,
-  SET_SUBSTITUTE_INFO
+  SET_SUBSTITUTE_INFO,
+  SET_WORKER_REPORTED_INFO
 } from "../actions/types";
 
 const initialState = {
@@ -11,7 +12,8 @@ const initialState = {
   workers: [],
   workersByTeam: [],
   worker: {},
-  substitutesInfo: []
+  substitutesInfo: [],
+  workersReported: []
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -40,6 +42,11 @@ export default function(state = initialState, { type, payload }) {
       return {
         ...state,
         substitutesInfo: [...state.substitutesInfo, payload.substituteInfo]
+      }
+    case SET_WORKER_REPORTED_INFO:
+      return {
+        ...state,
+        workersReported: [...state.workersReported, payload.workerReportedInfo]
       }
     default:
       return state;

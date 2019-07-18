@@ -4,12 +4,19 @@ import { Table, Divider, Drawer, Select, Button, Form, Input } from "antd";
 
 
 import HttpRequest from "../../api/HttpRequest";
-import { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo } from "../../actions/workerActions";
+import { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo, setReportWorkerInfo } from "../../actions/workerActions";
 
 const request = new HttpRequest();
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
+
+const reportStatus = [
+  { id: "AUSENTE", name: "AUSENTE" },
+  { id: "VACACION", name: "VACACION" },
+  { id: "PERMISO", name: "PERMISO" },
+  { id: "REPORTE", name: "REPORTE"}
+]
 
 const WorkDayPersons = ({
   selectedTeam,
@@ -18,6 +25,7 @@ const WorkDayPersons = ({
   fetchWorkersByTeam,
   replaceWorkers,
   setSubstituteInfo,
+  setReportWorkerInfo,
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
   const columns = [
@@ -44,15 +52,17 @@ const WorkDayPersons = ({
         <span>
           <Button onClick={() => handleDrawerStatus(id)}>Cambiar</Button>
           <Divider type="vertical" />
-          <Button>Reportar</Button>
+          <Button onClick={() => handleReportDrawerStatus(id)}>Reportar</Button>
         </span>
       )
     }
   ];
 
   const [drawerStatus, setDrawerStatus] = useState(false);
+  const [reportDrawerStatus, setReportDrawerStatus] = useState(false);
   const [availableWorkers, setAvailableWorkers] = useState([]);
   const [workerToChange, setWorkerToChange] = useState([]);
+  const [workerToReport, setWorkerToReport] = useState(null);
 
   const hasErrors = fieldsError => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -95,6 +105,28 @@ const WorkDayPersons = ({
     });
   };
 
+  const handleReportDrawerStatus = workerToReportId => {
+    if (!reportDrawerStatus) {
+      setWorkerToReport(workerToReportId);
+      setReportDrawerStatus(!reportDrawerStatus);
+    }
+    setReportDrawerStatus(!reportDrawerStatus);
+  };
+
+  const handleReportSubmit = e => {
+    e.preventDefault();
+    validateFields((err, values) => {
+      if (!err) {
+        const workerReported = workersByTeam.find(worker => worker.id === workerToReport);
+        workerReported.status = values.workerReportedStatus;
+        workerReported.comments = values.workerReportedComments;
+        setReportWorkerInfo(workerReported);
+      };
+    });
+    setReportDrawerStatus(!reportDrawerStatus);
+  };
+
+
   const workers = workersByTeam.map(workerByTeam => {
     //neccesary to remove warning from antd (every row should have a unique key)
     workerByTeam.key = workerByTeam.id;
@@ -103,6 +135,8 @@ const WorkDayPersons = ({
   return (
     <>
       {workers.length > 0 && <Table columns={columns} dataSource={workers} />}
+
+      {/* Drawer to change worker */ }
       <Drawer
         title="Seleccione una persona para realizar el cambio"
         placement="bottom"
@@ -150,6 +184,51 @@ const WorkDayPersons = ({
           <p>No se encontraron empleados disponibles</p>
         )}
       </Drawer>
+
+      {/* Drawer to report worker*/ }
+      <Drawer
+        title="Complete la información del reporte"
+        placement="bottom"
+        closable={true}
+        onClose={handleReportDrawerStatus}
+        visible={reportDrawerStatus}
+        destroyOnClose={true}
+        height={400}
+      >
+          <Form onSubmit={handleReportSubmit} layout="vertical">
+            <FormItem label="Motivo de reporte" hasFeedback>
+              {getFieldDecorator("workerReportedStatus", {
+                rules: [{ required: true, message: "Seleccione el motivo" }]
+              })(
+                <Select style={{ width: "100%" }}>
+                  {reportStatus.map(option => {
+                    return (
+                      <Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem label="Observaciones" hasFeedback>
+              {getFieldDecorator("workerReportedComments", {
+                rules: [{ required: false }]
+              })(
+                <TextArea style={{ width: "100%" }} rows={4}/>
+              )}
+            </FormItem>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={hasErrors(getFieldsError())}
+              >
+                Confirmar reporte
+              </Button>
+            </Form.Item>
+          </Form>        
+      </Drawer>
     </>
   );
 };
@@ -172,5 +251,5 @@ const EnhancedSubstitutionForm = Form.create({ name: "worker_substitution" })(
 
 export default connect(
   mapStateToProps,
-  { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo }
+  { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo, setReportWorkerInfo }
 )(EnhancedSubstitutionForm);

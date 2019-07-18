@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
 
 //Ant
-import { Row, Button, message } from "antd";
+import { Row, Button, message, Select, Input, Form } from "antd";
 
 //Custom
 import WorkDaySelectors from "./workDaySelectors";
@@ -13,6 +13,9 @@ import WorkDayPersons from "./workDayPersons";
 import WorkDayCar from "./workDayCar";
 
 const request = new HttpRequest();
+const Option = Select.Option;
+const { TextArea } = Input;
+const FormItem = Form.Item;
 
 //TODO: remove from susbtitutes where already exist by default
 
@@ -20,61 +23,83 @@ const WorkDay = ({
   selectedTeam,
   workersTeam,
   journeyCreateDate,
-  substitutesInfo
+  substitutesInfo,
+  teamVehicle,
+  workersReported,
+  form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
+  const hasErrors = fieldsError => {
+    return Object.keys(fieldsError).some(field => fieldsError[field]);
+  };
+
   const submitTeamJourney = () => {
-    const workers = workersTeam.map(worker => {
-      return {
-        workerId: worker.id,
-        startDate: journeyCreateDate,
-        endDate: journeyCreateDate,
-        comment: "",
-        status: "TRABAJADO" //
-      };
-    });
-    const journey = {
-      workers,
-      startDate: journeyCreateDate,
-      endDate: journeyCreateDate,
-      detailsInitialLog: "comentarion initial log",
-      vehicleId: "P131892",
-      receivedVehicleStatus: "Limpio",
-      workerTeamId: selectedTeam,
-      returnedVehicleStatus: "",
-      workTools: []
-    };
-    request
-      .createData(endpoints.teamJourney, journey)
-      .then(response => {
-        if (response.status === 200 || response.status === 201) {
-          message.success("Registro creado exitosamente");
-          if (substitutesInfo.length > 0) {
-            const substitutesRequest = substitutesInfo.map(substitute => {
-              return {
-                url: `/api/worker/${substitute.oldWorkerId}/substitute/${
-                  substitute.newWorkerId
-                }`,
-                params: {
-                  journey: journeyCreateDate,
-                  comments: substitute.comment,
-                  teamJourneyId: response.data.id,
-                  dateAssigned: journeyCreateDate
-                }
-              };
-            });
-            Promise.all(
-              substitutesRequest.map(substitute =>
-                request.createData(substitute.url, substitute.params)
-              )
-            )
-              .then(values => console.log("values", values))
-              .catch(errors => console.log("errors", errors));
-          }
+    validateFields((err, values) => {
+      if (!err) {
+        const workers = workersTeam.map(worker => {
+          return {
+            workerId: worker.id,
+            startDate: journeyCreateDate,
+            endDate: journeyCreateDate,
+            comment: "",
+            status: "TRABAJADO" //
+          };
+        });
+        if(workersReported.length > 0){
+          workersReported.map(workerReported => {
+            return workers.push({
+              workerId: workerReported.id,
+              startDate: journeyCreateDate,
+              endDate: journeyCreateDate,
+              comment: workerReported.comments,
+              status: workerReported.status //
+            })
+          })
         }
-      })
-      .catch(error => {
-        console.log("error", error);
-      });
+        const journey = {
+          workers,
+          startDate: journeyCreateDate,
+          endDate: journeyCreateDate,
+          detailsInitialLog: values.comments,
+          vehicleId: teamVehicle.id,
+          receivedVehicleStatus: values.vehicleStatus,
+          workerTeamId: selectedTeam,
+          returnedVehicleStatus: "",
+          workTools: []
+        };
+        request
+          .createData(endpoints.teamJourney, journey)
+          .then(response => {
+            if (response.status === 200 || response.status === 201) {
+              message.success("Registro creado exitosamente");
+              if (substitutesInfo.length > 0) {
+                const substitutesRequest = substitutesInfo.map(substitute => {
+                  return {
+                    url: `/api/worker/${substitute.oldWorkerId}/substitute/${
+                      substitute.newWorkerId
+                    }`,
+                    params: {
+                      journey: journeyCreateDate,
+                      comments: substitute.comment,
+                      teamJourneyId: response.data.id,
+                      dateAssigned: journeyCreateDate
+                    }
+                  };
+                });
+                Promise.all(
+                  substitutesRequest.map(substitute =>
+                    request.createData(substitute.url, substitute.params)
+                  )
+                )
+                  .then(values => console.log("values", values))
+                  .catch(errors => console.log("errors", errors));
+              }
+            }
+          })
+          .catch(error => {
+            console.log("error", error);
+          });
+      }
+    });
   };
 
   return (
@@ -84,7 +109,31 @@ const WorkDay = ({
         <WorkDaySelectors />
         <WorkDayPersons />
         <WorkDayCar />
-        <Button type="primary" htmlType="submit" onClick={submitTeamJourney}>
+        <FormItem label="Estado del vehículo recibido" hasFeedback>
+          {getFieldDecorator("vehicleStatus", {
+            rules: [
+              { required: true, message: "Seleccione el estado del vehículo" }
+            ]
+          })(
+            <Select style={{ width: "100%" }}>
+              <Option value="LIMPIO"> Limpio </Option>
+              <Option value="DEFECTO"> Defecto </Option>
+              <Option value="SUCIO"> Sucio </Option>
+              <Option value="LISTO"> Listo </Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem label="Observaciones" hasFeedback>
+          {getFieldDecorator("comments", {
+            rules: [{ required: false }]
+          })(<TextArea style={{ width: "100%" }} rows={4} />)}
+        </FormItem>
+        <Button
+          type="primary"
+          htmlType="submit"
+          onClick={submitTeamJourney}
+          disabled={hasErrors(getFieldsError())}
+        >
           Crear Jornada
         </Button>
       </Row>
@@ -97,15 +146,21 @@ const mapStateToProps = state => {
   const substitutesInfo = state.workersInfo.substitutesInfo;
   const selectedTeam = state.teamsInfo.selectedTeam;
   const journeyCreateDate = state.journeyInfo.journeyCreateDate;
+  const teamVehicle = state.vehicleInfo.teamVehicle;
+  const workersReported = state.workersInfo.workersReported || [];
   return {
     selectedTeam,
     workersTeam,
     journeyCreateDate,
-    substitutesInfo
+    substitutesInfo,
+    teamVehicle,
+    workersReported
   };
 };
+
+const EnhancedForm = Form.create({ name: "workday" })(WorkDay);
 
 export default connect(
   mapStateToProps,
   null
-)(WorkDay);
+)(EnhancedForm);
