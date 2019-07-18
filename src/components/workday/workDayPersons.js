@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Table, Divider, Drawer, Select, Button, Form, Input } from "antd";
+import { Table, Divider, Drawer, Select, Button, Form, Input, Badge } from "antd";
 
 
 import HttpRequest from "../../api/HttpRequest";
@@ -28,6 +28,14 @@ const WorkDayPersons = ({
   setReportWorkerInfo,
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
+
+  const [drawerStatus, setDrawerStatus] = useState(false);
+  const [reportDrawerStatus, setReportDrawerStatus] = useState(false);
+  const [availableWorkers, setAvailableWorkers] = useState([]);
+  const [workerToChange, setWorkerToChange] = useState([]);
+  const [workerToReport, setWorkerToReport] = useState(null);
+  const [workersReported, setWorkersReported] = useState([]);
+
   const columns = [
     {
       title: "Nombre",
@@ -50,19 +58,18 @@ const WorkDayPersons = ({
       key: "action",
       render: ({ id }) => (
         <span>
-          <Button onClick={() => handleDrawerStatus(id)}>Cambiar</Button>
-          <Divider type="vertical" />
-          <Button onClick={() => handleReportDrawerStatus(id)}>Reportar</Button>
+          { workersReported.find(worker => worker.id === id) ? 
+            <Badge count={"Reportado"}/> : 
+            <>
+              <Button onClick={() => handleDrawerStatus(id)}>Cambiar</Button>
+              <Divider type="vertical" />
+              <Button type="danger" onClick={() => handleReportDrawerStatus(id)}>Reportar</Button>
+            </>
+          }
         </span>
       )
     }
   ];
-
-  const [drawerStatus, setDrawerStatus] = useState(false);
-  const [reportDrawerStatus, setReportDrawerStatus] = useState(false);
-  const [availableWorkers, setAvailableWorkers] = useState([]);
-  const [workerToChange, setWorkerToChange] = useState([]);
-  const [workerToReport, setWorkerToReport] = useState(null);
 
   const hasErrors = fieldsError => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -121,6 +128,7 @@ const WorkDayPersons = ({
         workerReported.status = values.workerReportedStatus;
         workerReported.comments = values.workerReportedComments;
         setReportWorkerInfo(workerReported);
+        setWorkersReported([...workersReported, workerReported]);
       };
     });
     setReportDrawerStatus(!reportDrawerStatus);
