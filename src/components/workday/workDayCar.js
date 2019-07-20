@@ -77,11 +77,9 @@ const WorkDayCar = ({
                 src="https://static.vecteezy.com/system/resources/previews/000/420/310/large_2x/vector-truck-icon.jpg"
               />
             }
-            actions={
-              [
-                <Button onClick={() => handleDrawerStatus(teamVehicle.id)}>Cambiar</Button>, 
-                <Button>Reportar</Button>
-              ]}
+            actions={[
+              <Button onClick={() => handleDrawerStatus(teamVehicle.id)}>Cambiar</Button>
+            ]}
           >
             <Meta
               avatar={

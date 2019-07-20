@@ -31,12 +31,23 @@ const WorkDay = ({
   const hasErrors = fieldsError => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
   };
+  
+  
+  const setWorkersReported = (workers, value) => {
+    return workers.map((worker, index) => {
+      if(worker.workerId === value.id){
+        workers[index].comment = value.comments;
+        workers[index].status = value.status;
+      }
+    }); 
+  }
 
   const submitTeamJourney = () => {
     validateFields((err, values) => {
       if (!err) {
         const workers = workersTeam.map(worker => {
           return {
+            name: worker.name,
             workerId: worker.id,
             startDate: journeyCreateDate,
             endDate: journeyCreateDate,
@@ -44,17 +55,11 @@ const WorkDay = ({
             status: "TRABAJADO" //
           };
         });
-        if(workersReported.length > 0){
-          workersReported.map(workerReported => {
-            return workers.push({
-              workerId: workerReported.id,
-              startDate: journeyCreateDate,
-              endDate: journeyCreateDate,
-              comment: workerReported.comments,
-              status: workerReported.status //
-            })
-          })
-        }
+
+        workersReported.map(workerReported => {
+          setWorkersReported(workers, workerReported);
+        });
+        
         const journey = {
           workers,
           startDate: journeyCreateDate,

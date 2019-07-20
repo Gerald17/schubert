@@ -4,7 +4,8 @@ import {
   FETCH_WORKERS_BY_TEAM,
   UPDATE_REPLACED_WORKERS,
   SET_SUBSTITUTE_INFO,
-  SET_WORKER_REPORTED_INFO
+  SET_WORKER_REPORTED_INFO,
+  ADD_WORKER_TO_TEAM
 } from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
@@ -97,4 +98,16 @@ export const setReportWorkerInfo = workerReportedInfo => {
       }
     });
   };
+}
+
+export const addWorkerToTeam = workerToAddId => async dispatch => {
+  const worker = await request
+  .fetchData(`${endpoints.worker}/${workerToAddId}`)
+  .then(response => response.data);
+  dispatch({
+    type: ADD_WORKER_TO_TEAM,
+    payload: {
+      worker
+    }
+  });
 }

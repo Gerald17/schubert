@@ -4,7 +4,13 @@ import { Table, Divider, Drawer, Select, Button, Form, Input, Badge } from "antd
 
 
 import HttpRequest from "../../api/HttpRequest";
-import { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo, setReportWorkerInfo } from "../../actions/workerActions";
+import { 
+  fetchWorkersByTeam, 
+  replaceWorkers, 
+  setSubstituteInfo, 
+  setReportWorkerInfo, 
+  addWorkerToTeam 
+} from "../../actions/workerActions";
 
 const request = new HttpRequest();
 const FormItem = Form.Item;
@@ -26,11 +32,13 @@ const WorkDayPersons = ({
   replaceWorkers,
   setSubstituteInfo,
   setReportWorkerInfo,
+  addWorkerToTeam,
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
 
   const [drawerStatus, setDrawerStatus] = useState(false);
   const [reportDrawerStatus, setReportDrawerStatus] = useState(false);
+  const [addDrawerStatus, setAddDrawerStatus] = useState(false);
   const [availableWorkers, setAvailableWorkers] = useState([]);
   const [workerToChange, setWorkerToChange] = useState([]);
   const [workerToReport, setWorkerToReport] = useState(null);
@@ -134,6 +142,33 @@ const WorkDayPersons = ({
     setReportDrawerStatus(!reportDrawerStatus);
   };
 
+  const handleAddDrawerStatus = () => {
+    if (!addDrawerStatus) {
+      request
+        .fetchData(
+          `/api/Worker`,
+          {journeyCreateDate}
+        )
+        .then(allAvailableWorkers => {
+          return allAvailableWorkers.data;
+        })
+        .then(substituteWorkers => {
+          setAvailableWorkers(substituteWorkers);
+          setAddDrawerStatus(!addDrawerStatus);
+        });
+    }
+    setAddDrawerStatus(!addDrawerStatus);
+  };
+
+  const handleAddSubmit = e => {
+    e.preventDefault();
+    validateFields(['employee'], (err, values) => {
+      if (!err) {
+        addWorkerToTeam(values.employee);
+      };
+    });
+    setAddDrawerStatus(!addDrawerStatus);
+  };
 
   const workers = workersByTeam.map(workerByTeam => {
     //neccesary to remove warning from antd (every row should have a unique key)
@@ -142,7 +177,16 @@ const WorkDayPersons = ({
   });
   return (
     <>
-      {workers.length > 0 && <Table columns={columns} dataSource={workers} />}
+      {workers.length > 0 && 
+      <>
+      <Button
+        type="primary"
+        onClick={() => handleAddDrawerStatus()}
+      >
+        Agregar
+      </Button>
+        <Table columns={columns} dataSource={workers} />
+      </>}
 
       {/* Drawer to change worker */ }
       <Drawer
@@ -176,6 +220,49 @@ const WorkDayPersons = ({
                 rules: [{ required: false }]
               })(
                 <TextArea style={{ width: "100%" }} rows={4}/>
+              )}
+            </FormItem>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={hasErrors(getFieldsError())}
+              >
+                Confirmar
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : (
+          <p>No se encontraron empleados disponibles</p>
+        )}
+      </Drawer>
+
+
+      {/* Drawer to add worker */ }
+      <Drawer
+        title="Seleccione una persona para agregar al equipo"
+        placement="bottom"
+        closable={true}
+        onClose={handleAddDrawerStatus}
+        visible={addDrawerStatus}
+        destroyOnClose={true}
+        height={250}
+      >
+        {availableWorkers.length > 0 ? (
+          <Form onSubmit={handleAddSubmit} layout="vertical">
+            <FormItem label="Empleado" hasFeedback>
+              {getFieldDecorator("employee", {
+                rules: [{ required: true, message: "Seleccione" }]
+              })(
+                <Select style={{ width: "100%" }}>
+                  {availableWorkers.map(option => {
+                    return (
+                      <Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
               )}
             </FormItem>
             <Form.Item>
@@ -259,5 +346,5 @@ const EnhancedSubstitutionForm = Form.create({ name: "worker_substitution" })(
 
 export default connect(
   mapStateToProps,
-  { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo, setReportWorkerInfo }
+  { fetchWorkersByTeam, replaceWorkers, setSubstituteInfo, setReportWorkerInfo, addWorkerToTeam }
 )(EnhancedSubstitutionForm);
