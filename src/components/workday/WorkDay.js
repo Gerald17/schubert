@@ -18,6 +18,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 
 //TODO: remove from susbtitutes where already exist by default
+//TODO: remove workers already exists when add a new worker
 
 const WorkDay = ({
   selectedTeam,
