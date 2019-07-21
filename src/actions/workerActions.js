@@ -32,7 +32,7 @@ export const replaceWorkers = (
 ) => async dispatch => {
   let updatedWorkers = [];
   updatedWorkers = currentWorkers.filter(worker => worker.id !== oldWorker);
-  const getWorkerInfo = await request
+  await request
     .fetchData(`${endpoints.worker}/${newWorker}`)
     .then(response => {
       return response.data;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import HttpRequest from "../../api/HttpRequest";
@@ -58,7 +58,7 @@ const WorkDay = ({
         });
 
         workersReported.map(workerReported => {
-          setWorkersReported(workers, workerReported);
+          return setWorkersReported(workers, workerReported);
         });
         
         const journey = {

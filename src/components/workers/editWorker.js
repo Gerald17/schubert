@@ -29,8 +29,6 @@ const EditWorker = ({
   form: {
     getFieldDecorator,
     getFieldsError,
-    getFieldError,
-    isFieldTouched,
     validateFields
   }
 }) => {

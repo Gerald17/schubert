@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 
-import { Table, Divider } from "antd";
+import { Table } from "antd";
 
 import { fetchWorkers } from "../../actions/workerActions";
 
@@ -31,8 +31,6 @@ const Workers = ({ workers, fetchWorkers, match: { path } }) => {
       render: (worker) => (
         <span>
           <Link to={`${path}/edit/${worker.id}`}>Editar</Link>
-          <Divider type="vertical" />
-          <button>Eliminar</button>
         </span>
       )
     }
@@ -43,16 +41,10 @@ const Workers = ({ workers, fetchWorkers, match: { path } }) => {
     fetchWorkers();
   }, {});
 
-  const workersKey = workers.map(workers => {
-    //neccesary to remove warning from antd (every row should have a unique key)
-    workers.key = workers.id;
-    return workers;
-  })
-
   return (
     <>
       <Link to={`${path}/create`}>Crear</Link>
-      { workersKey.length > 0 && <Table columns={columns} dataSource={workersKey} /> }
+      { workers.length > 0 && <Table columns={columns} dataSource={workers} rowKey="id"/> }
     </>
   );
 };

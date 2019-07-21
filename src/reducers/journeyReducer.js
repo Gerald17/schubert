@@ -1,7 +1,8 @@
-import { SET_JOURNEY_CREATE_DATE } from "../actions/types";
+import { SET_JOURNEY_CREATE_DATE, OPENED_JOURNEYS } from "../actions/types";
 
 const initialState = {
-  journeyCreateDate: null
+  journeyCreateDate: null,
+  openedJourneys: []
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -10,6 +11,11 @@ export default function(state = initialState, { type, payload }) {
       return {
         ...state,
         journeyCreateDate: payload.journeyCreateDate
+      };
+    case OPENED_JOURNEYS:
+      return {
+        ...state,
+        openedJourneys: payload.journeys
       };
     default:
       return state;

@@ -1,4 +1,8 @@
 import WorkDay from '../workday/WorkDay';
+
+import TeamJourneys from '../workday/TeamJourneys';
+import EndWorkDay from '../workday/endWorkDay';
+
 import Workers from '../../components/workers/workers';
 import EditWorker from '../../components/workers/editWorker';
 import CreateWorker from '../../components/workers/createWorker';
@@ -14,7 +18,7 @@ export const menuItems = [
     id: 2,
     label: "Terminar Jornada",
     icon: "pie-chart",
-    link: "/workDay"
+    link: "/teamJourneys"
   },
   {
     id: 3,
@@ -36,21 +40,36 @@ export const menuComponents = [
   },
   {
     id: 2,
+    component: TeamJourneys,
+    path: "/teamJourneys"
+  },
+  {
+    id: 21,
+    component: EndWorkDay,
+    path: "/teamJourneys/:id"
+  },
+  {
+    id: 3,
+    component: EndWorkDay,
+    path: "/endWorkDay"
+  },
+  {
+    id: 4,
     component: null,
     path: "/trucks"
   },
   {
-    id: 3,
+    id: 5,
     component: Workers,
     path: "/persons"
   },
   {
-    id: 31,
+    id: 51,
     component: EditWorker,
     path: "/persons/edit/:workerId"
   },
   {
-    id: 32,
+    id: 52,
     component: CreateWorker,
     path: "/persons/create"
   },

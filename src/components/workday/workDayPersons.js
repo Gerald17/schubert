@@ -111,7 +111,7 @@ const WorkDayPersons = ({
 
   const handleSubmit = e => {
     e.preventDefault();
-    validateFields((err, values) => {
+    validateFields(["substitute"], (err, values) => {
       if (!err) {
         replaceWorkers(workerToChange, values.substitute, workersByTeam);
         setSubstituteInfo(workerToChange, values);
@@ -130,7 +130,7 @@ const WorkDayPersons = ({
 
   const handleReportSubmit = e => {
     e.preventDefault();
-    validateFields((err, values) => {
+    validateFields(["workerReportedStatus"], (err, values) => {
       if (!err) {
         const workerReported = workersByTeam.find(worker => worker.id === workerToReport);
         workerReported.status = values.workerReportedStatus;

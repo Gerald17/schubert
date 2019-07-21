@@ -4,7 +4,7 @@ import { Select, Form, DatePicker } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
 import { setSelectedTeam, saveTeamsToStore } from "../../actions/teamActions";
-import { setJourneyCreateDate } from "../../actions/journeyActions";
+import { setJourneyCreateDate, setOpenedJourneys } from "../../actions/journeyActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
 import { getOptions, dateFormat, formatDateYYYYMMDD } from "../../utils/common";
@@ -18,7 +18,7 @@ const WorkDaySelectors = ({
   values,
   setFieldTouched,
   setFieldValue,
-  setSelectedTeam,
+  setOpenedJourneys,
   saveTeamsToStore,
   setJourneyCreateDate,
   journeyCreateDate
@@ -60,7 +60,7 @@ const WorkDaySelectors = ({
     const requestTeams = request.fetchData(
       `${endpoints.team}?Filters=site==${values.site}&workarea==${
         values.workArea
-      }&date=${journeyCreateDate}`,
+      }`,
       {}
     );
     requestTeams
@@ -82,7 +82,15 @@ const WorkDaySelectors = ({
 
   const sendTeamToStore = value => {
     setFieldValue("team", value);
-    setSelectedTeam(value);
+    const requestJourney = request.fetchData(
+      `${endpoints.teamJourney}?Filters=site==${values.site}&workArea==${values.workArea}&date=${journeyCreateDate}`,
+      {}
+    );
+    requestJourney
+      .then(response => {
+        setOpenedJourneys(response.data);
+      })
+      .catch(error => console.log(error));
   };
 
   const onChangeDate = value => {
@@ -189,7 +197,7 @@ const WorkDaySelectors = ({
 
 const mapStateToProps = state => {
   const journeyCreateDate = state.journeyInfo.journeyCreateDate;
-  return {
+  return { 
     journeyCreateDate
   };
 };
@@ -207,5 +215,5 @@ const WorkDayForm = withFormik({
 
 export default connect(
   mapStateToProps,
-  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore }
+  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore, setOpenedJourneys }
 )(WorkDayForm);
