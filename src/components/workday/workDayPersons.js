@@ -170,14 +170,9 @@ const WorkDayPersons = ({
     setAddDrawerStatus(!addDrawerStatus);
   };
 
-  const workers = workersByTeam.map(workerByTeam => {
-    //neccesary to remove warning from antd (every row should have a unique key)
-    workerByTeam.key = workerByTeam.id;
-    return workerByTeam;
-  });
   return (
     <>
-      {workers.length > 0 && 
+      {workersByTeam.length > 0 && 
       <>
       <Button
         type="primary"
@@ -185,7 +180,7 @@ const WorkDayPersons = ({
       >
         Agregar
       </Button>
-        <Table columns={columns} dataSource={workers} />
+        <Table columns={columns} dataSource={workersByTeam} rowKey={'id'} />
       </>}
 
       {/* Drawer to change worker */ }
