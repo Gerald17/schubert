@@ -70,7 +70,8 @@ const WorkDayCar = ({
       {(teamVehicle && teamVehicle.hasOwnProperty("id")) && (
         <>
           <Card
-            style={{ width: 300 }}
+            type="inner"
+            title="Vehículo"
             cover={
               <img
                 alt="example"

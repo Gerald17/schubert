@@ -5,7 +5,7 @@ import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
 
 //Ant
-import { Row, Col, Button, message, Select, Input, Form, Card } from "antd";
+import { Row, Col, Button, message, Select, Input, Form, Card, List, Typography } from "antd";
 
 //Custom
 import WorkDaySelectors from "./workDaySelectors";
@@ -111,10 +111,33 @@ const WorkDay = ({
   return (
     <>
       <h1>Crear Jornada</h1>
-      <Row>
         <WorkDaySelectors />
-        <WorkDayPersons />      
-          <WorkDayCar />
+        <WorkDayPersons />
+        <Row gutter={16}>
+          <Col span={4}>          
+            <WorkDayCar />
+          </Col>
+          {workersTeam.length > 0 && 
+          <Col span={20}>
+            <Card title="Herramientas">
+                <List itemLayout="vertical">
+                  <List.Item>
+                    <Typography.Text>Tool 1</Typography.Text>
+                  </List.Item>
+                  <List.Item>
+                    <Typography.Text>Tool 2</Typography.Text>
+                  </List.Item>
+                  <List.Item>
+                    <Typography.Text>Tool 3</Typography.Text>
+                  </List.Item>
+                  <List.Item>
+                    <Typography.Text>Tool 4</Typography.Text>
+                  </List.Item>
+                </List>
+            </Card>
+          </Col>
+          }
+        </Row>
         {workersTeam.length > 0 && 
           <>
             <FormItem label="Estado del vehículo recibido" hasFeedback>
@@ -141,12 +164,12 @@ const WorkDay = ({
               htmlType="submit"
               onClick={submitTeamJourney}
               disabled={hasErrors(getFieldsError())}
+              style={{ float: "right" }}
             >
               Crear Jornada
             </Button>
           </>
         }
-      </Row>
     </>
   );
 };

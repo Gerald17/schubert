@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Select, Form, DatePicker } from "antd";
+import { Select, Form, DatePicker, Row, Col } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
 import { setSelectedTeam, saveTeamsToStore } from "../../actions/teamActions";
@@ -107,42 +107,48 @@ const WorkDaySelectors = ({
   }
 
   return (
-    <>
-    <FormItem label="Seleccione la fecha">
-      <FormikField
-        name="date"
-        render={({ field }) => (
-          <DatePicker
-            onChange={value => onChangeDate(value)}
-            format={dateFormat}/>
-        )}
-      />
-    </FormItem>
-    <Form layout="inline">
+    <Row gutter={16}>
+      <Col span={12}>
+        <FormItem label="Seleccione la fecha">
+          <FormikField
+            name="date"
+            render={({ field }) => (
+              <DatePicker
+                onChange={value => onChangeDate(value)}
+                format={dateFormat}
+                style={{width: "100%"}}
+              />
+            )}
+          />
+        </FormItem>
+      </Col>
       { showSelectors && 
         <>
-          <FormItem label="Seleccione el departamento">
-            <FormikField
-              name="site"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  onChange={value => setSelectedValue("site", value)}
-                  onBlur={() => setFieldTouched("site", true)}
-                  value={values.site}
-                  style={{ width: "200px" }}
-                >
-                  {siteDepartments.map(option => {
-                    return (
-                      <Option key={option.value} value={option.value}>
-                        {option.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              )}
-            />
-          </FormItem>
+          <Col span={12}>
+            <FormItem label="Seleccione el departamento">
+              <FormikField
+                name="site"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    onChange={value => setSelectedValue("site", value)}
+                    onBlur={() => setFieldTouched("site", true)}
+                    value={values.site}
+                    style={{width: "100%"}}
+                  >
+                    {siteDepartments.map(option => {
+                      return (
+                        <Option key={option.value} value={option.value}>
+                          {option.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                )}
+              />
+            </FormItem>
+          </Col>
+          <Col span={12}>
           <FormItem label="Seleccione el área">
             <FormikField
               name="workArea"
@@ -152,7 +158,7 @@ const WorkDaySelectors = ({
                   onChange={value => setSelectedValue("workArea", value)}
                   onBlur={() => setFieldTouched("workArea", true)}
                   value={values.workArea}
-                  style={{ width: "200px" }}
+                  style={{width: "100%"}}
                 >
                   {workAreas.map(option => {
                     return (
@@ -165,32 +171,34 @@ const WorkDaySelectors = ({
               )}
             />
           </FormItem>
-          <FormItem label="Seleccione el equipo">
-            <FormikField
-              name="team"
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  onChange={value => sendTeamToStore(value)}
-                  onBlur={() => setFieldTouched("team", true)}
-                  value={values.team}
-                  style={{ width: "200px" }}
-                >
-                  {teams.map(option => {
-                    return (
-                      <Option key={option.value} value={option.value}>
-                        {option.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              )}
-            />
-          </FormItem>
+          </Col>
+          <Col span={12}>
+            <FormItem label="Seleccione el equipo">
+              <FormikField
+                name="team"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    onChange={value => sendTeamToStore(value)}
+                    onBlur={() => setFieldTouched("team", true)}
+                    value={values.team}
+                    style={{width: "100%"}}
+                  >
+                    {teams.map(option => {
+                      return (
+                        <Option key={option.value} value={option.value}>
+                          {option.name}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                )}
+              />
+            </FormItem>
+          </Col>
         </>
       }
-    </Form>
-    </>
+    </Row>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Table, Divider, Drawer, Select, Button, Form, Input, Badge } from "antd";
+import { Table, Divider, Drawer, Select, Button, Form, Input, Badge, Icon } from "antd";
 
 
 import HttpRequest from "../../api/HttpRequest";
@@ -173,15 +173,18 @@ const WorkDayPersons = ({
   return (
     <>
       {workersByTeam.length > 0 && 
-        <>
+        <div>  
+        <Divider type="horizontal" />
         <Button
           type="primary"
           onClick={() => handleAddDrawerStatus()}
+          style={{ marginBottom: 16, float: "right" }}
         >
-          Agregar
+          Agregar Trabajador 
+          <Icon type="usergroup-add" />
         </Button>
-          <Table columns={columns} dataSource={workersByTeam} rowKey={'id'} />
-        </>
+          <Table columns={columns} dataSource={workersByTeam} rowKey={'id'} title={() => "Trabajadores"} bordered />
+        </div>
       }
 
       {/* Drawer to change worker */ }

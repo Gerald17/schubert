@@ -135,7 +135,7 @@ const EditTeamJourney = ({
       {journeyData.length > 0 && 
         <>
           <h1>{journeyData[0].teamJourneyId}</h1>
-          <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" />
+          <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" title={() => "Trabajadores"} bordered  />
 
           <Card
             style={{ width: 300 }}
