@@ -5,7 +5,7 @@ import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
 
 //Ant
-import { Row, Col, Button, message, Select, Input, Form, Card, List, Typography } from "antd";
+import { Row, Col, Button, message, Select, Input, Form, Card, List, Typography, Icon } from "antd";
 
 //Custom
 import WorkDaySelectors from "./workDaySelectors";
@@ -164,9 +164,10 @@ const WorkDay = ({
               htmlType="submit"
               onClick={submitTeamJourney}
               disabled={hasErrors(getFieldsError())}
-              style={{ float: "right" }}
+              style={{ marginBottom: "20px", float: "right" }}
             >
-              Crear Jornada
+              Crear Jornada              
+              <Icon type="carry-out" />
             </Button>
           </>
         }

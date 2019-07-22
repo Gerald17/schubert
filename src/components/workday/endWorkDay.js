@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Form, Input, Button, Select, Table, message, Divider, Card, Avatar, List, Typography } from "antd";
+import { Form, Input, Button, Select, Table, message, Divider, Card, Avatar, List, Typography, Icon } from "antd";
 
 import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
@@ -80,7 +80,7 @@ const EditTeamJourney = ({
         request
           .updateData(`${endpoints.teamJourney}/${params.id}`, valuesToSend)
           .then(response => {
-            if (response.status === 200 || response.status === 204) {
+            if (response.status === 200 || response.status === 201) {
               message.success("Datos actualizados exitosamente");
             }
           })
@@ -123,8 +123,10 @@ const EditTeamJourney = ({
             type="primary"
             htmlType="submit"
             disabled={hasErrors(getFieldsError())}
+            style={{float: "right"}}
           >
             Cerrar Jornada
+            <Icon type="carry-out" />
           </Button>
         </Form.Item>
 
@@ -135,7 +137,7 @@ const EditTeamJourney = ({
       {journeyData.length > 0 && 
         <>
           <h1>{journeyData[0].teamJourneyId}</h1>
-          <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" title={() => "Trabajadores"} bordered  />
+          <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" title={() => "Trabajadores"} bordered />
 
           <Card
             style={{ width: 300 }}

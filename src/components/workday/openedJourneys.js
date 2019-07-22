@@ -38,7 +38,7 @@ const OpenedJourneys = ({ storedOpenedJourneys, match: { path } }) => {
   return (
     <>
       {storedOpenedJourneys.length > 0 && 
-        <Table columns={columns} dataSource={storedOpenedJourneys} rowKey="id" />
+        <Table columns={columns} dataSource={storedOpenedJourneys} rowKey="id" title={() => "Jornadas Abiertas"} bordered/>
       }
     </>
   );
