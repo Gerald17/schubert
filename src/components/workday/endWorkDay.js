@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Form, Input, Button, Select, Table, message, Divider, Card, Avatar, List, Typography, Icon } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Table,
+  message,
+  Divider,
+  Card,
+  Avatar,
+  List,
+  Typography,
+  Icon,
+  Row,
+  Col
+} from "antd";
 
 import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
@@ -11,12 +26,12 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
 const { Meta } = Card;
+const { Title } = Typography;
 
 const EditTeamJourney = ({
   match: { params },
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
-
   const [journeyData, setJourneData] = useState({});
 
   const columnsWorkers = [
@@ -93,6 +108,7 @@ const EditTeamJourney = ({
 
   return (
     <>
+    <Title>Cerrar Jornada</Title>
       <Form onSubmit={handleSubmit} layout="vertical">
         <FormItem label="Id">
           {getFieldDecorator("id", {
@@ -123,54 +139,85 @@ const EditTeamJourney = ({
             type="primary"
             htmlType="submit"
             disabled={hasErrors(getFieldsError())}
-            style={{float: "right"}}
+            style={{ float: "right" }}
           >
             Cerrar Jornada
             <Icon type="carry-out" />
           </Button>
         </Form.Item>
-
-        <Divider />
       </Form>
 
-      <h2>Detalle de la Jornada</h2>
-      {journeyData.length > 0 && 
+      {journeyData.length > 0 && (
         <>
-          <h1>{journeyData[0].teamJourneyId}</h1>
-          <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" title={() => "Trabajadores"} bordered />
-
-          <Card
-            style={{ width: 300 }}
-            cover={
-              <img
-                alt="example"
-                src="https://static.vecteezy.com/system/resources/previews/000/420/310/large_2x/vector-truck-icon.jpg"
-              />
-            }
-          >
-            <Meta
-              avatar={
-                <Avatar src="https://images.unsplash.com/photo-1490670096971-8005fec55d50?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" />
+        <Row>
+          <Col span={24}>
+            <Divider />
+            <h2>Detalle de la Jornada</h2>
+            <h1>{journeyData[0].teamJourneyId}</h1>
+            <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" title={() => "Trabajadores"} bordered />
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={4}>
+            <Card
+              type="inner"
+              title="Vehículo"
+              style={{ marginBottom: "16px", width: "100%" }}
+              cover={
+                <img
+                  alt="example"
+                  src="https://static.vecteezy.com/system/resources/previews/000/420/310/large_2x/vector-truck-icon.jpg"
+                />
               }
-              title={journeyData[0].vehicleId}
-              description={journeyData[0].vehicle}
-            />
-            <Card type="inner" title="Info">
+            >
+              <Meta
+                avatar={
+                  <Avatar src="https://images.unsplash.com/photo-1490670096971-8005fec55d50?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" />
+                }
+                title={journeyData[0].vehicleId}
+                description={journeyData[0].vehicle}
+              />
+              <Card type="inner" title="Info">
+                <List itemLayout="vertical">
+                  <List.Item>
+                    <Typography.Text>
+                      Estado recibido {journeyData[0].receivedVehicleStatus}{" "}
+                    </Typography.Text>
+                  </List.Item>
+                </List>
+              </Card>
+            </Card>
+          </Col>
+          <Col span={20}>
+            <Card title="Herramientas">
               <List itemLayout="vertical">
                 <List.Item>
-                  <Typography.Text>Estado recibido {journeyData[0].receivedVehicleStatus} </Typography.Text>
+                  <Typography.Text>Tool 1</Typography.Text>
+                </List.Item>
+                <List.Item>
+                  <Typography.Text>Tool 2</Typography.Text>
+                </List.Item>
+                <List.Item>
+                  <Typography.Text>Tool 3</Typography.Text>
+                </List.Item>
+                <List.Item>
+                  <Typography.Text>Tool 4</Typography.Text>
                 </List.Item>
               </List>
             </Card>
-          </Card>
-          <Card
-            title="Commentarios"
-            style={{ width: "100%" }}
-          >            
-            <Typography.Text>{journeyData[0].detailsInitialLog} </Typography.Text>
-          </Card>          
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Card title="Commentarios" style={{ width: "100%" }}>
+              <Typography.Text>
+                {journeyData[0].detailsInitialLog}{" "}
+              </Typography.Text>
+            </Card>
+          </Col>
+        </Row>
         </>
-      }
+      )}
     </>
   );
 };

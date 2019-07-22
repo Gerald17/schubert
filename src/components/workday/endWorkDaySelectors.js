@@ -83,7 +83,7 @@ const WorkDaySelectors = ({
   const sendTeamToStore = value => {
     setFieldValue("team", value);
     const requestJourney = request.fetchData(
-      `${endpoints.teamJourney}?Filters=site==${values.site}&workArea==${values.workArea}&date=${journeyCreateDate}`,
+      `${endpoints.teamJourney}?Filters=site==${values.site}&workArea==${values.workArea}&closed==${false}&date=${journeyCreateDate}`,
       {}
     );
     requestJourney

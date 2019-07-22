@@ -16,6 +16,7 @@ const request = new HttpRequest();
 const Option = Select.Option;
 const { TextArea } = Input;
 const FormItem = Form.Item;
+const { Title } = Typography;
 
 //TODO: remove from susbtitutes where already exist by default
 //TODO: remove workers already exists when add a new worker
@@ -110,7 +111,7 @@ const WorkDay = ({
 
   return (
     <>
-      <h1>Crear Jornada</h1>
+      <Title>Crear Jornada</Title>
         <WorkDaySelectors />
         <WorkDayPersons />
         <Row gutter={16}>

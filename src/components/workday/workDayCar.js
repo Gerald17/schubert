@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { replaceVehicle } from "../../actions/vehiclesActions";
 
-import { Card, Avatar, List, Typography, Button, Drawer, Form, Select } from "antd";
+import { Card, Avatar, List, Typography, Button, Drawer, Form, Select, Icon } from "antd";
 
 import HttpRequest from "../../api/HttpRequest";
 
@@ -79,7 +79,7 @@ const WorkDayCar = ({
               />
             }
             actions={[
-              <Button onClick={() => handleDrawerStatus(teamVehicle.id)}>Cambiar</Button>
+              <Button onClick={() => handleDrawerStatus(teamVehicle.id)}>Cambiar <Icon type="retweet"/></Button>
             ]}
           >
             <Meta
@@ -142,7 +142,8 @@ const WorkDayCar = ({
                     htmlType="submit"
                     disabled={hasErrors(getFieldsError())}
                   >
-                    Confirmar
+                    Confirmar Cambio
+                    <Icon type="retweet"/>
                   </Button>
                 </Form.Item>
               </Form>

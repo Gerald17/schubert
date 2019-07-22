@@ -69,9 +69,9 @@ const WorkDayPersons = ({
           { workersReported.find(worker => worker.id === id) ? 
             <Badge count={"Reportado"}/> : 
             <>
-              <Button onClick={() => handleDrawerStatus(id)}>Cambiar</Button>
+              <Button onClick={() => handleDrawerStatus(id)}>Cambiar <Icon type="retweet" /></Button>
               <Divider type="vertical" />
-              <Button type="danger" onClick={() => handleReportDrawerStatus(id)}>Reportar</Button>
+              <Button type="danger" onClick={() => handleReportDrawerStatus(id)}>Reportar <Icon type="alert"/></Button>
             </>
           }
         </span>
@@ -228,6 +228,7 @@ const WorkDayPersons = ({
                 disabled={hasErrors(getFieldsError())}
               >
                 Confirmar
+                <Icon type="add-user"/>
               </Button>
             </Form.Item>
           </Form>
@@ -270,7 +271,8 @@ const WorkDayPersons = ({
                 htmlType="submit"
                 disabled={hasErrors(getFieldsError())}
               >
-                Confirmar
+                Confirmar Cambio
+                <Icon type="retweet"/>
               </Button>
             </Form.Item>
           </Form>
@@ -319,6 +321,7 @@ const WorkDayPersons = ({
                 disabled={hasErrors(getFieldsError())}
               >
                 Confirmar reporte
+                <Icon type="alert"/>
               </Button>
             </Form.Item>
           </Form>        
