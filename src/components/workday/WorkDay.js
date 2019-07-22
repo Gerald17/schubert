@@ -5,7 +5,7 @@ import HttpRequest from "../../api/HttpRequest";
 import { endpoints } from "../../api/endpoints";
 
 //Ant
-import { Row, Button, message, Select, Input, Form } from "antd";
+import { Row, Col, Button, message, Select, Input, Form, Card } from "antd";
 
 //Custom
 import WorkDaySelectors from "./workDaySelectors";
@@ -113,35 +113,39 @@ const WorkDay = ({
       <h1>Crear Jornada</h1>
       <Row>
         <WorkDaySelectors />
-        <WorkDayPersons />
-        <WorkDayCar />
-        <FormItem label="Estado del vehículo recibido" hasFeedback>
-          {getFieldDecorator("vehicleStatus", {
-            rules: [
-              { required: true, message: "Seleccione el estado del vehículo" }
-            ]
-          })(
-            <Select style={{ width: "100%" }}>
-              <Option value="LIMPIO"> Limpio </Option>
-              <Option value="DEFECTO"> Defecto </Option>
-              <Option value="SUCIO"> Sucio </Option>
-              <Option value="LISTO"> Listo </Option>
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Observaciones" hasFeedback>
-          {getFieldDecorator("comments", {
-            rules: [{ required: false }]
-          })(<TextArea style={{ width: "100%" }} rows={4} />)}
-        </FormItem>
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={submitTeamJourney}
-          disabled={hasErrors(getFieldsError())}
-        >
-          Crear Jornada
-        </Button>
+        <WorkDayPersons />      
+          <WorkDayCar />
+        {workersTeam.length > 0 && 
+          <>
+            <FormItem label="Estado del vehículo recibido" hasFeedback>
+              {getFieldDecorator("vehicleStatus", {
+                rules: [
+                  { required: true, message: "Seleccione el estado del vehículo" }
+                ]
+              })(
+                <Select style={{ width: "100%" }}>
+                  <Option value="LIMPIO"> Limpio </Option>
+                  <Option value="DEFECTO"> Defecto </Option>
+                  <Option value="SUCIO"> Sucio </Option>
+                  <Option value="LISTO"> Listo </Option>
+                </Select>
+              )}
+            </FormItem>
+            <FormItem label="Observaciones" hasFeedback>
+              {getFieldDecorator("comments", {
+                rules: [{ required: false }]
+              })(<TextArea style={{ width: "100%" }} rows={4} />)}
+            </FormItem>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={submitTeamJourney}
+              disabled={hasErrors(getFieldsError())}
+            >
+              Crear Jornada
+            </Button>
+          </>
+        }
       </Row>
     </>
   );

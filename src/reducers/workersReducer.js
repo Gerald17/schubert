@@ -5,7 +5,8 @@ import {
   UPDATE_REPLACED_WORKERS,
   SET_SUBSTITUTE_INFO,
   SET_WORKER_REPORTED_INFO,
-  ADD_WORKER_TO_TEAM
+  ADD_WORKER_TO_TEAM,
+  RESET_WORKERS
 } from "../actions/types";
 
 const initialState = {
@@ -50,11 +51,14 @@ export default function(state = initialState, { type, payload }) {
         workersReported: [...state.workersReported, payload.workerReportedInfo]
       }
     case ADD_WORKER_TO_TEAM:
-
-  console.log("worker R", payload.worker);
       return {
         ...state,
         workersByTeam: [...state.workersByTeam, payload.worker]
+      }
+    case RESET_WORKERS:
+      return {
+        ...state,
+        workersByTeam: []
       }
     default:
       return state;

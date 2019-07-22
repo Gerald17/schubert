@@ -49,7 +49,7 @@ const EditTeamJourney = ({
       dataIndex: "worker",
       key: "companyId",
       render: worker => worker.companyId
-    },
+    }
   ];
 
   useEffect(() => {
@@ -72,10 +72,8 @@ const EditTeamJourney = ({
     validateFields((err, values) => {
       if (!err) {
         const valuesToSend = {
-          startDate: "2019-07-21",
           endDate: "2019-07-21",
           detailsEndLog: values.detailsEndLog,
-          workerTeamId: 1,
           returnedVehicleStatus: values.returnedVehicleStatus,
           workTools: []
         };
@@ -138,13 +136,37 @@ const EditTeamJourney = ({
         <>
           <h1>{journeyData[0].teamJourneyId}</h1>
           <Table columns={columnsWorkers} dataSource={journeyData[0].workers} rowKey="id" />
+
+          <Card
+            style={{ width: 300 }}
+            cover={
+              <img
+                alt="example"
+                src="https://static.vecteezy.com/system/resources/previews/000/420/310/large_2x/vector-truck-icon.jpg"
+              />
+            }
+          >
+            <Meta
+              avatar={
+                <Avatar src="https://images.unsplash.com/photo-1490670096971-8005fec55d50?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" />
+              }
+              title={journeyData[0].vehicleId}
+              description={journeyData[0].vehicle}
+            />
+            <Card type="inner" title="Info">
+              <List itemLayout="vertical">
+                <List.Item>
+                  <Typography.Text>Estado recibido {journeyData[0].receivedVehicleStatus} </Typography.Text>
+                </List.Item>
+              </List>
+            </Card>
+          </Card>
           <Card
             title="Commentarios"
             style={{ width: "100%" }}
           >            
             <Typography.Text>{journeyData[0].detailsInitialLog} </Typography.Text>
-          </Card>
-          
+          </Card>          
         </>
       }
     </>

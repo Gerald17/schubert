@@ -173,15 +173,16 @@ const WorkDayPersons = ({
   return (
     <>
       {workersByTeam.length > 0 && 
-      <>
-      <Button
-        type="primary"
-        onClick={() => handleAddDrawerStatus()}
-      >
-        Agregar
-      </Button>
-        <Table columns={columns} dataSource={workersByTeam} rowKey={'id'} />
-      </>}
+        <>
+        <Button
+          type="primary"
+          onClick={() => handleAddDrawerStatus()}
+        >
+          Agregar
+        </Button>
+          <Table columns={columns} dataSource={workersByTeam} rowKey={'id'} />
+        </>
+      }
 
       {/* Drawer to change worker */ }
       <Drawer

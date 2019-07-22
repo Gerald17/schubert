@@ -5,7 +5,8 @@ import {
   UPDATE_REPLACED_WORKERS,
   SET_SUBSTITUTE_INFO,
   SET_WORKER_REPORTED_INFO,
-  ADD_WORKER_TO_TEAM
+  ADD_WORKER_TO_TEAM,
+  RESET_WORKERS
 } from "../actions/types";
 
 import HttpRequest from "../api/HttpRequest";
@@ -110,4 +111,13 @@ export const addWorkerToTeam = workerToAddId => async dispatch => {
       worker
     }
   });
+}
+
+export const resetWorkers = () => {
+  console.log("knasdad")
+  return (dispatch) => {
+    dispatch({
+      type: RESET_WORKERS
+    });
+  };
 }
