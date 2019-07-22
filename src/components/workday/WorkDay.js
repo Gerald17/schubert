@@ -115,11 +115,11 @@ const WorkDay = ({
         <WorkDaySelectors />
         <WorkDayPersons />
         <Row gutter={16}>
-          <Col span={4}>          
+          <Col md={4} sm={24} xs={24}>          
             <WorkDayCar />
           </Col>
           {workersTeam.length > 0 && 
-          <Col span={20}>
+          <Col md={20} sm={24} xs={24}>
             <Card title="Herramientas">
                 <List itemLayout="vertical">
                   <List.Item>

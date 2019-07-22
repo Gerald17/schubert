@@ -100,7 +100,7 @@ const WorkDaySelectors = ({
 
   return (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col md={12} sm={12} xs={24}>
         <FormItem label="Seleccione la fecha">
           <FormikField
             name="date"
@@ -116,7 +116,7 @@ const WorkDaySelectors = ({
       </Col>
       { showSelectors && 
         <>
-            <Col span={12}>
+            <Col md={12} sm={12} xs={24}>
               <FormItem label="Seleccione el departamento">
                 <FormikField
                   name="site"
@@ -140,7 +140,7 @@ const WorkDaySelectors = ({
                 />
               </FormItem>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={12} xs={24}>
             <FormItem label="Seleccione el área">
                 <FormikField
                   name="workArea"
@@ -164,7 +164,7 @@ const WorkDaySelectors = ({
                 />
               </FormItem>
             </Col>
-            <Col span={12}>
+            <Col md={12} sm={12} xs={24}>
               <FormItem label="Seleccione el equipo">
                 <FormikField
                   name="team"

@@ -178,7 +178,7 @@ const WorkDayPersons = ({
         <Button
           type="primary"
           onClick={() => handleAddDrawerStatus()}
-          style={{ marginBottom: 16, float: "right" }}
+          style={{ marginBottom: 16 }}
         >
           Agregar Trabajador 
           <Icon type="usergroup-add" />

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import WorkDay from './components/workday/WorkDay';
 
 //Ant
-import { Layout, Breadcrumb } from 'antd';
+import { Layout, Breadcrumb, Icon } from 'antd';
 
 //Components
 import SideMenu from "./components/menu/menu";
@@ -26,6 +26,7 @@ class App extends Component {
       <Layout style={{ minHeight: "100vh" }}>
         <Router>
           <Sider
+            style={{backgroundColor: "#6D747A"}}
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
@@ -33,7 +34,12 @@ class App extends Component {
               {<SideMenu/>}
           </Sider>
           <Layout>
-            <Header style={{ padding: 0 }} />
+            <Header style={{ padding: 0, backgroundColor: "#4e5358" }}>
+              <div>
+              <h2 style={{color: "white", marginLeft: "15px"}}>Bienvenido</h2>
+              <Icon type="logout" style={{position: "absolute", color: "white", fontSize: "25px", top: "15px", right: "15px"}} />
+              </div>
+            </Header>
             <Content style={{ margin: "0 16px" }}>
               <Breadcrumb style={{ margin: "16px 0" }}>
                 {/*<Breadcrumb.Item>Users</Breadcrumb.Item>*/}

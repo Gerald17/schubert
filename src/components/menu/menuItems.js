@@ -11,19 +11,19 @@ export const menuItems = [
   {
     id: 1,
     label: "Iniciar Jornada",
-    icon: "pie-chart",
+    icon: "calendar",
     link: "/workDay"
   },
   {
     id: 2,
     label: "Terminar Jornada",
-    icon: "pie-chart",
+    icon: "carry-out",
     link: "/teamJourneys"
   },
   {
     id: 3,
     label: "Catalogos",
-    icon: "pie-chart",
+    icon: "database",
     link: "#",
     submenu: [
       { id: 31, label: "Personas", link: "/persons" },

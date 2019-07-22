@@ -3,7 +3,6 @@ import { Drawer } from 'antd';
 
 const MainDrawer = props => {
   const { placement, title, onClose, drawerStatus, destroyOnClose, height } = props;
-  console.log("props", props)
   return (
     <Drawer
       title={title}
