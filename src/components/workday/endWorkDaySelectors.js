@@ -21,7 +21,7 @@ const WorkDaySelectors = ({
   setOpenedJourneys,
   saveTeamsToStore,
   setJourneyEndDate,
-  journeyCreateDate
+  journeyEndDate
 }) => {
   // define state for selects
   const [siteDepartments, setSiteDepartments] = useState([]);
@@ -57,19 +57,15 @@ const WorkDaySelectors = ({
   };
 
   const loadTeams = () => {
-    const requestTeams = request.fetchData(
-      `${endpoints.team}?Filters=site==${values.site}&workarea==${
-        values.workArea
-      }`,
+    const requestJourney = request.fetchData(
+      `${endpoints.teamJourney}?Filters=site==${values.site}&workArea==${values.workArea}&closed==${false}&date=${journeyEndDate}`,
       {}
     );
-    requestTeams
-      .then(teams => {
-        saveTeamsToStore(teams.data);
-        return getOptions(teams.data)
+    requestJourney
+      .then(response => {
+        setOpenedJourneys(response.data);
       })
-      .then(options => setTeams(options))
-      .catch(error => console.log(error));
+      .catch(error => console.log(error));      
   };
 
   const handleHttpError = error => {
@@ -82,15 +78,6 @@ const WorkDaySelectors = ({
 
   const sendTeamToStore = value => {
     setFieldValue("team", value);
-    const requestJourney = request.fetchData(
-      `${endpoints.teamJourney}?Filters=site==${values.site}&workArea==${values.workArea}&closed==${false}&date=${journeyCreateDate}`,
-      {}
-    );
-    requestJourney
-      .then(response => {
-        setOpenedJourneys(response.data);
-      })
-      .catch(error => console.log(error));
   };
 
   const onChangeDate = value => {
@@ -102,13 +89,16 @@ const WorkDaySelectors = ({
       setSelectedValue("team", null);
       setShowSelectors(false);
     }else{    
+      setSelectedValue("workArea", null);
+      setSelectedValue("site", null);
+      setSelectedValue("team", null);
       setShowSelectors(true);
     }
   }
 
   return (
     <Row gutter={16}>
-      <Col span={12}>
+      <Col span={8}>
         <FormItem label="Seleccione la fecha">
           <FormikField
             name="date"
@@ -124,7 +114,7 @@ const WorkDaySelectors = ({
       </Col>
       { showSelectors && 
         <>
-          <Col span={12}>
+          <Col span={8}>
             <FormItem label="Seleccione el departamento">
               <FormikField
                 name="site"
@@ -148,7 +138,7 @@ const WorkDaySelectors = ({
               />
             </FormItem>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
           <FormItem label="Seleccione el área">
             <FormikField
               name="workArea"
@@ -172,30 +162,6 @@ const WorkDaySelectors = ({
             />
           </FormItem>
           </Col>
-          <Col span={12}>
-            <FormItem label="Seleccione el equipo">
-              <FormikField
-                name="team"
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    onChange={value => sendTeamToStore(value)}
-                    onBlur={() => setFieldTouched("team", true)}
-                    value={values.team}
-                    style={{width: "100%"}}
-                  >
-                    {teams.map(option => {
-                      return (
-                        <Option key={option.value} value={option.value}>
-                          {option.name}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                )}
-              />
-            </FormItem>
-          </Col>
         </>
       }
     </Row>
@@ -204,9 +170,9 @@ const WorkDaySelectors = ({
 
 
 const mapStateToProps = state => {
-  const journeyCreateDate = state.journeyInfo.journeyCreateDate;
+  const journeyEndDate = state.journeyInfo.journeyEndDate;
   return { 
-    journeyCreateDate
+    journeyEndDate
   };
 };
 
