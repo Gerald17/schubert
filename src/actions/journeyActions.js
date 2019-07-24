@@ -1,4 +1,4 @@
-import { SET_JOURNEY_CREATE_DATE, OPENED_JOURNEYS } from './types';
+import { SET_JOURNEY_CREATE_DATE, SET_JOURNEY_END_DATE, OPENED_JOURNEYS } from './types';
 
 // import HttpRequest from "../api/HttpRequest";
 // import { endpoints } from "../api/endpoints";
@@ -10,6 +10,15 @@ export const setJourneyCreateDate = journeyCreateDate => {
     type: SET_JOURNEY_CREATE_DATE,
     payload: {
       journeyCreateDate
+    }
+  }
+}
+
+export const setJourneyEndDate = journeyEndDate => {
+  return {
+    type: SET_JOURNEY_END_DATE,
+    payload: {
+      journeyEndDate
     }
   }
 }

@@ -28,7 +28,8 @@ const { TextArea } = Input;
 const { Meta } = Card;
 const { Title } = Typography;
 
-const EditTeamJourney = ({
+const EndTeamJourney = ({
+  journeyEndDate,
   match: { params },
   form: { getFieldDecorator, getFieldsError, validateFields }
 }) => {
@@ -87,7 +88,7 @@ const EditTeamJourney = ({
     validateFields((err, values) => {
       if (!err) {
         const valuesToSend = {
-          endDate: "2019-07-21",
+          endDate: journeyEndDate,
           detailsEndLog: values.detailsEndLog,
           returnedVehicleStatus: values.returnedVehicleStatus,
           workTools: []
@@ -108,6 +109,7 @@ const EditTeamJourney = ({
 
   return (
     <>
+
     <Title>Cerrar Jornada</Title>
       <Form onSubmit={handleSubmit} layout="vertical">
         <FormItem label="Id">
@@ -115,6 +117,8 @@ const EditTeamJourney = ({
             initialValue: params.id
           })(<Input disabled />)}
         </FormItem>
+        { journeyData.length > 0 && journeyData.isClosed &&
+        <>
         <FormItem label="Estado del vehículo a entregar" hasFeedback>
           {getFieldDecorator("returnedVehicleStatus", {
             rules: [
@@ -145,7 +149,10 @@ const EditTeamJourney = ({
             <Icon type="carry-out" />
           </Button>
         </Form.Item>
+        </>
+        }
       </Form>
+
 
       {journeyData.length > 0 && (
         <>
@@ -231,11 +238,18 @@ const EditTeamJourney = ({
   );
 };
 
+const mapStateToProps = state => {
+  const journeyEndDate = state.journeyInfo.journeyEndDate;
+  return {
+    journeyEndDate
+  };
+};
+
 const EnhancedEditForm = Form.create({ name: "close_journey" })(
-  EditTeamJourney
+  EndTeamJourney
 );
 
 export default connect(
-  null,
+  mapStateToProps,
   null
 )(EnhancedEditForm);

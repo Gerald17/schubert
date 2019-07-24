@@ -4,7 +4,7 @@ import { Select, Form, DatePicker, Row, Col } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
 import { setSelectedTeam, saveTeamsToStore } from "../../actions/teamActions";
-import { setJourneyCreateDate, setOpenedJourneys } from "../../actions/journeyActions";
+import { setJourneyEndDate, setOpenedJourneys } from "../../actions/journeyActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
 import { getOptions, dateFormat, formatDateYYYYMMDD } from "../../utils/common";
@@ -20,7 +20,7 @@ const WorkDaySelectors = ({
   setFieldValue,
   setOpenedJourneys,
   saveTeamsToStore,
-  setJourneyCreateDate,
+  setJourneyEndDate,
   journeyCreateDate
 }) => {
   // define state for selects
@@ -94,7 +94,7 @@ const WorkDaySelectors = ({
   };
 
   const onChangeDate = value => {
-    setJourneyCreateDate(formatDateYYYYMMDD(value));
+    setJourneyEndDate(formatDateYYYYMMDD(value));
     setSelectedValue("date", value);
     if(!value){
       setSelectedValue("workArea", null);
@@ -223,5 +223,5 @@ const WorkDayForm = withFormik({
 
 export default connect(
   mapStateToProps,
-  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore, setOpenedJourneys }
+  { setSelectedTeam, setJourneyEndDate, saveTeamsToStore, setOpenedJourneys }
 )(WorkDayForm);
