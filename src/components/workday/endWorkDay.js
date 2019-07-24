@@ -39,31 +39,31 @@ const EditTeamJourney = ({
       title: "Código",
       dataIndex: "workerId",
       key: "workerId",
-      render: worker => worker
+      render: worker => worker || ""
     },
     {
       title: "Nombre",
       dataIndex: "worker",
       key: "worker",
-      render: worker => worker.name
+      render: worker => worker.name || ""
     },
     {
       title: "Cargo",
       dataIndex: "worker",
       key: "workerTeam",
-      render: worker => worker.workerTeam.workArea.name
+      render: worker => worker.workerTeam.workArea.name || ""
     },
     {
       title: "Equipo",
       dataIndex: "worker",
       key: "workerTeamName",
-      render: worker => worker.workerTeam.name
+      render: worker => worker.workerTeam.name || ""
     },
     {
       title: "Empresa",
       dataIndex: "worker",
       key: "companyId",
-      render: worker => worker.companyId
+      render: worker => worker.companyId || ""
     }
   ];
 
@@ -174,16 +174,25 @@ const EditTeamJourney = ({
                 avatar={
                   <Avatar src="https://images.unsplash.com/photo-1490670096971-8005fec55d50?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" />
                 }
-                title={journeyData[0].vehicleId}
-                description={journeyData[0].vehicle}
+                title={journeyData[0].vehicle.model}
+                description={journeyData[0].vehicleId}
               />
               <Card type="inner" title="Info">
                 <List itemLayout="vertical">
                   <List.Item>
-                    <Typography.Text>
-                      Estado recibido {journeyData[0].receivedVehicleStatus}{" "}
+                  <Typography.Text>
+                      Estado recibido {journeyData[0].receivedVehicleStatus}
                     </Typography.Text>
-                  </List.Item>
+                  <br />
+                  <Typography.Text>Año {journeyData[0].vehicle.year} </Typography.Text>
+                  <br />
+                  <Typography.Text>
+                    Km {journeyData[0].vehicle.kilometers}
+                  </Typography.Text>
+                  <br />
+                  <Typography.Text>Mi {journeyData[0].vehicle.mileage} </Typography.Text>
+                  <br />
+                </List.Item>
                 </List>
               </Card>
             </Card>
