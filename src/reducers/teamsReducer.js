@@ -12,7 +12,7 @@ export default function(state = initialState, { type, payload }) {
     case SET_SELECTED_TEAM:
       return {
         ...state,
-        selectedTeam: payload.team
+        selectedTeam: payload.team,
       };
     case FETCH_TEAMS:
       return {

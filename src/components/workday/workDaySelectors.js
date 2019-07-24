@@ -4,6 +4,7 @@ import { Select, Form, DatePicker, Row, Col } from "antd";
 import { withFormik, Field as FormikField } from "formik";
 
 import { setSelectedTeam, saveTeamsToStore } from "../../actions/teamActions";
+import { replaceVehicle } from "../../actions/vehiclesActions";
 import { setJourneyCreateDate } from "../../actions/journeyActions";
 import { endpoints } from "../../api/endpoints";
 import HttpRequest from "../../api/HttpRequest";
@@ -19,6 +20,8 @@ const WorkDaySelectors = ({
   setFieldTouched,
   setFieldValue,
   setSelectedTeam,
+  teamsData,
+  replaceVehicle,
   saveTeamsToStore,
   setJourneyCreateDate,
   journeyCreateDate
@@ -83,6 +86,10 @@ const WorkDaySelectors = ({
   const sendTeamToStore = value => {
     setFieldValue("team", value);
     setSelectedTeam(value);
+    if(teamsData.length > 0){
+      const vehicleFromTeam = teamsData.find(team => team.id === value);
+      replaceVehicle(vehicleFromTeam.vehicle);
+    }
   };
 
   const onChangeDate = value => {
@@ -197,8 +204,10 @@ const WorkDaySelectors = ({
 
 const mapStateToProps = state => {
   const journeyCreateDate = state.journeyInfo.journeyCreateDate;
+  const teamsData = state.teamsInfo.teamsData;
   return {
-    journeyCreateDate
+    journeyCreateDate,
+    teamsData
   };
 };
 
@@ -215,5 +224,5 @@ const WorkDayForm = withFormik({
 
 export default connect(
   mapStateToProps,
-  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore }
+  { setSelectedTeam, setJourneyCreateDate, saveTeamsToStore, replaceVehicle }
 )(WorkDayForm);

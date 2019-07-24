@@ -114,7 +114,6 @@ export const addWorkerToTeam = workerToAddId => async dispatch => {
 }
 
 export const resetWorkers = () => {
-  console.log("knasdad")
   return (dispatch) => {
     dispatch({
       type: RESET_WORKERS

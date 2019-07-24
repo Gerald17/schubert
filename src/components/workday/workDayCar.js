@@ -24,10 +24,9 @@ const WorkDayCar = ({
   const [teamVehicle, setTeamVehicle] = useState({});
 
   useEffect(() => {
-    if(teamsData.length > 0 && selectedTeam){
+    if(selectedTeam){
       const vehicleFromTeam = teamsData.find(team => team.id === selectedTeam);
       setTeamVehicle(vehicleFromTeam.vehicle);
-      replaceVehicle(vehicleFromTeam.vehicle)
     }
   }, [selectedTeam])
   
@@ -163,7 +162,7 @@ const mapStateToProps = state => {
   const journeyCreateDate = state.journeyInfo.journeyCreateDate;
   return {
     selectedTeam,
-    teamsData: teamsData,
+    teamsData,
     journeyCreateDate
   };
 };

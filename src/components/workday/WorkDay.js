@@ -25,6 +25,7 @@ const WorkDay = ({
   selectedTeam,
   workersTeam,
   journeyCreateDate,
+  teamsData,
   substitutesInfo,
   teamVehicle,
   workersReported,
@@ -54,14 +55,14 @@ const WorkDay = ({
             startDate: journeyCreateDate,
             endDate: journeyCreateDate,
             comment: "",
-            status: "TRABAJADO" //
+            status: "TRABAJADO"
           };
         });
 
         workersReported.map(workerReported => {
           return setWorkersReported(workers, workerReported);
         });
-        
+
         const journey = {
           workers,
           startDate: journeyCreateDate,
@@ -73,6 +74,13 @@ const WorkDay = ({
           returnedVehicleStatus: "",
           workTools: []
         };
+
+        
+        if(!journey.vehicleId){
+          const vehicleFromTeam = teamsData.find(team => team.id === selectedTeam);
+          journey.vehicleId = vehicleFromTeam.vehicleId;
+        }
+        
         request
           .createData(endpoints.teamJourney, journey)
           .then(response => {
@@ -105,6 +113,7 @@ const WorkDay = ({
           .catch(error => {
             console.log("error", error);
           });
+          
       }
     });
   };
@@ -177,6 +186,7 @@ const WorkDay = ({
 };
 
 const mapStateToProps = state => {
+  const teamsData = state.teamsInfo.teamsData;
   const workersTeam = state.workersInfo.workersByTeam;
   const substitutesInfo = state.workersInfo.substitutesInfo;
   const selectedTeam = state.teamsInfo.selectedTeam;
@@ -184,6 +194,7 @@ const mapStateToProps = state => {
   const teamVehicle = state.vehicleInfo.teamVehicle;
   const workersReported = state.workersInfo.workersReported || [];
   return {
+    teamsData,
     selectedTeam,
     workersTeam,
     journeyCreateDate,
