@@ -6,71 +6,90 @@ import EndWorkDay from '../workday/endWorkDay';
 import Workers from '../../components/workers/workers';
 import EditWorker from '../../components/workers/editWorker';
 import CreateWorker from '../../components/workers/createWorker';
+import company from '../company';
+import editCompany from '../company/editCompany';
+import createCompany from '../company/createCompany';
 
 export const menuItems = [
-  {
-    id: 1,
-    label: "Iniciar Jornada",
-    icon: "calendar",
-    link: "/workDay"
-  },
-  {
-    id: 2,
-    label: "Terminar Jornada",
-    icon: "carry-out",
-    link: "/teamJourneys"
-  },
-  {
-    id: 3,
-    label: "Catalogos",
-    icon: "database",
-    link: "#",
-    submenu: [
-      { id: 31, label: "Personas", link: "/persons" },
-      { id: 32, label: "Camiones", link: "/trucks" }
-    ]
-  }
+	{
+		id: 1,
+		label: 'Iniciar Jornada',
+		icon: 'calendar',
+		link: '/workDay',
+	},
+	{
+		id: 2,
+		label: 'Terminar Jornada',
+		icon: 'carry-out',
+		link: '/teamJourneys',
+	},
+	{
+		id: 3,
+		label: 'Catalogos',
+		icon: 'database',
+		link: '#',
+		submenu: [
+			{ id: 31, label: 'Personas', link: '/persons' },
+			{ id: 32, label: 'Camiones', link: '/trucks' },
+			{ id: 33, label: 'Compañias', link: '/company' },
+		],
+	},
 ];
 
 export const menuComponents = [
-  {
-    id: 1,
-    component: WorkDay,
-    path: "/workDay"
-  },
-  {
-    id: 2,
-    component: TeamJourneys,
-    path: "/teamJourneys"
-  },
-  {
-    id: 21,
-    component: EndWorkDay,
-    path: "/teamJourneys/:id"
-  },
-  {
-    id: 3,
-    component: EndWorkDay,
-    path: "/endWorkDay"
-  },
-  {
-    id: 4,
-    component: null,
-    path: "/trucks"
-  },
-  {
-    id: 5,
-    component: Workers,
-    path: "/persons"
-  },
-  {
-    id: 51,
-    component: EditWorker,
-    path: "/persons/edit/:workerId"
-  },
-  {
-    id: 52,
-    component: CreateWorker,
-    path: "/persons/create"
-  },
-]
+	{
+		id: 1,
+		component: WorkDay,
+		path: '/workDay',
+	},
+	{
+		id: 2,
+		component: TeamJourneys,
+		path: '/teamJourneys',
+	},
+	{
+		id: 21,
+		component: EndWorkDay,
+		path: '/teamJourneys/:id',
+	},
+	{
+		id: 3,
+		component: EndWorkDay,
+		path: '/endWorkDay',
+	},
+	{
+		id: 4,
+		component: null,
+		path: '/trucks',
+	},
+	{
+		id: 5,
+		component: Workers,
+		path: '/persons',
+	},
+	{
+		id: 51,
+		component: EditWorker,
+		path: '/persons/edit/:workerId',
+	},
+	{
+		id: 52,
+		component: CreateWorker,
+		path: '/persons/create',
+	},
+	{
+		id: 6,
+		component: company,
+		path: '/company',
+	},
+	{
+		id: 61,
+		component: editCompany,
+		path: '/company/edit/:companyId',
+	},
+	{
+		id: 62,
+		component: createCompany,
+		path: '/company/create',
+	},
+];
