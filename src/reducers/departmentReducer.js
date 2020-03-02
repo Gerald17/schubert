@@ -9,7 +9,7 @@ export default function(state = initialState, { type, payload }) {
 		case FETCH_DEPARTMENT:
 			return {
 				...state,
-				departments: payload.department,
+				departments: payload.departments,
 			};
 		default:
 			return state;

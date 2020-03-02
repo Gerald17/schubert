@@ -17,6 +17,10 @@ import CreateDepartment from '../department/createDepartment';
 import workArea from '../workArea';
 import editWorkArea from '../workArea/editWorkArea';
 import createWorkArea from '../workArea/createWorkArea';
+import editVehicle from '../vehicle/editVehicle';
+import createVehicle from '../vehicle/createVehicle';
+import createWorkPosition from '../workPosition/createWorkPosition';
+import editWorkPosition from '../workPosition/editWorkPosition';
 
 export const menuItems = [
 	{
@@ -126,12 +130,12 @@ export const menuComponents = [
 	},
 	{
 		id: 81,
-		component: editCompany,
+		component: editWorkPosition,
 		path: '/workPosition/edit/:workPositionId',
 	},
 	{
 		id: 82,
-		component: createCompany,
+		component: createWorkPosition,
 		path: '/workPosition/create',
 	},
 	{
@@ -156,12 +160,12 @@ export const menuComponents = [
 	},
 	{
 		id: 101,
-		component: editCompany,
+		component: editVehicle,
 		path: '/vehicle/edit/:vehicleId',
 	},
 	{
 		id: 102,
-		component: createCompany,
+		component: createVehicle,
 		path: '/vehicle/create',
 	},
 ];

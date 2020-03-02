@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 
-import { fetchSingleDepartment } from '../../actions/departmentActions';
+import { fetchSingleWorkPosition } from '../../actions/workPositionsActions';
+import { fetchWorkArea } from '../../actions/workAreaActions';
+import { getOptions } from '../../utils/common';
 
 import HttpRequest from '../../api/HttpRequest';
 import { endpoints } from '../../api/endpoints';
@@ -10,16 +12,20 @@ import { endpoints } from '../../api/endpoints';
 const request = new HttpRequest();
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
-const EditDepartment = ({
-	departments,
-	fetchSingleDepartment,
+const EditWorkPosition = ({
+	workPosition,
+	workAreas,
+	fetchSingleWorkPosition,
+	fetchWorkArea,
 	match: { params },
 	form: { getFieldDecorator, getFieldsError, validateFields },
 }) => {
 	useEffect(() => {
-		fetchSingleDepartment(params.departmentId);
-	}, [fetchSingleDepartment, params]);
+		fetchSingleWorkPosition(params.workPositionId);
+		fetchWorkArea();
+	}, [fetchSingleWorkPosition, fetchWorkArea, params]);
 
 	const hasErrors = fieldsError => {
 		return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -30,7 +36,7 @@ const EditDepartment = ({
 		validateFields((err, values) => {
 			if (!err) {
 				request
-					.updateData(`${endpoints.siteDepartment}/${departments.id}`, values)
+					.updateData(`${endpoints.workPosition}/${workPosition.id}`, values)
 					.then(response => {
 						if (response.status === 200 || response.status === 204) {
 							message.success('Datos actualizados exitosamente');
@@ -49,26 +55,43 @@ const EditDepartment = ({
 	//const workPositionError = isFieldTouched("workPosition") && getFieldError("workPosition");
 	//const companyIdError = isFieldTouched("companyId") && getFieldError("companyId");
 	//const workerTeamIdError = isFieldTouched("workerTeamId") && getFieldError("workerTeamId");
-	console.log('departments', departments);
 
 	return (
 		<Form onSubmit={handleSubmit} layout="vertical">
 			<FormItem label="Id">
 				{getFieldDecorator('id', {
-					initialValue: departments.id,
+					initialValue: workPosition.id,
 				})(<Input disabled />)}
 			</FormItem>
 			<FormItem label="Nombre" hasFeedback>
 				{getFieldDecorator('name', {
 					rules: [{ required: true, message: 'Escriba el nombre' }],
-					initialValue: departments.name,
+					initialValue: workPosition.name,
 				})(<Input placeholder="Nombre" />)}
 			</FormItem>
 			<FormItem label="Descripcion" hasFeedback>
 				{getFieldDecorator('description', {
-					rules: [{ required: true, message: 'Escriba una descripcion' }],
-					initialValue: departments.description,
-				})(<Input placeholder="Descripcion" />)}
+					rules: [{ required: true, message: 'Escriba la descripcion' }],
+					initialValue: workPosition.description,
+				})(<Input placeholder="description" />)}
+			</FormItem>
+			<FormItem label="Area de trabajo" hasFeedback>
+				{getFieldDecorator('workAreaId', {
+					rules: [
+						{ required: true, message: 'Seleccione el area de trabajo!' },
+					],
+					initialValue: workPosition.workAreaId,
+				})(
+					<Select style={{ width: '200px' }}>
+						{workAreas.map(option => {
+							return (
+								<Option key={option.value} value={option.value}>
+									{option.name}
+								</Option>
+							);
+						})}
+					</Select>
+				)}
 			</FormItem>
 			<Form.Item>
 				<Button
@@ -83,16 +106,19 @@ const EditDepartment = ({
 };
 
 const mapStateToProps = state => {
-	const departments = state.departmentInfo.departments;
+	const workPosition = state.workPositionsInfo.workPositions;
+	const workAreas = getOptions(state.workAreasInfo.workAreas);
 	return {
-		departments,
+		workPosition,
+		workAreas,
 	};
 };
 
-const EnhancedDepartmentEditForm = Form.create({ name: 'department_edit' })(
-	EditDepartment
+const EnhancedEditWorkPositionForm = Form.create({ name: 'workPosition_edit' })(
+	EditWorkPosition
 );
 
 export default connect(mapStateToProps, {
-	fetchSingleDepartment,
-})(EnhancedDepartmentEditForm);
+	fetchSingleWorkPosition,
+	fetchWorkArea,
+})(EnhancedEditWorkPositionForm);

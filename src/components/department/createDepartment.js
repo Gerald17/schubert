@@ -36,11 +36,6 @@ const CreateDepartment = ({
 
 	return (
 		<Form onSubmit={handleSubmit} layout="vertical">
-			<FormItem label="Id" hasFeedback>
-				{getFieldDecorator('id', {
-					rules: [{ required: true, message: 'Escriba el ID' }],
-				})(<Input placeholder="ID" />)}
-			</FormItem>
 			<FormItem label="Nombre" hasFeedback>
 				{getFieldDecorator('name', {
 					rules: [{ required: true, message: 'Escriba el nombre' }],

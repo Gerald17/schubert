@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, message } from 'antd';
 
-import { fetchSingleDepartment } from '../../actions/departmentActions';
+import { fetchSingleVehicle } from '../../actions/vehiclesActions';
 
 import HttpRequest from '../../api/HttpRequest';
 import { endpoints } from '../../api/endpoints';
@@ -11,15 +11,15 @@ const request = new HttpRequest();
 
 const FormItem = Form.Item;
 
-const EditDepartment = ({
-	departments,
-	fetchSingleDepartment,
+const EditVehicle = ({
+	vehicles,
+	fetchSingleVehicle,
 	match: { params },
 	form: { getFieldDecorator, getFieldsError, validateFields },
 }) => {
 	useEffect(() => {
-		fetchSingleDepartment(params.departmentId);
-	}, [fetchSingleDepartment, params]);
+		fetchSingleVehicle(params.vehicleId);
+	}, [fetchSingleVehicle, params]);
 
 	const hasErrors = fieldsError => {
 		return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -30,7 +30,7 @@ const EditDepartment = ({
 		validateFields((err, values) => {
 			if (!err) {
 				request
-					.updateData(`${endpoints.siteDepartment}/${departments.id}`, values)
+					.updateData(`${endpoints.vehicle}/${vehicles.id}`, values)
 					.then(response => {
 						if (response.status === 200 || response.status === 204) {
 							message.success('Datos actualizados exitosamente');
@@ -49,26 +49,38 @@ const EditDepartment = ({
 	//const workPositionError = isFieldTouched("workPosition") && getFieldError("workPosition");
 	//const companyIdError = isFieldTouched("companyId") && getFieldError("companyId");
 	//const workerTeamIdError = isFieldTouched("workerTeamId") && getFieldError("workerTeamId");
-	console.log('departments', departments);
+	console.log('vehicles', vehicles);
 
 	return (
 		<Form onSubmit={handleSubmit} layout="vertical">
 			<FormItem label="Id">
 				{getFieldDecorator('id', {
-					initialValue: departments.id,
+					initialValue: vehicles.id,
 				})(<Input disabled />)}
 			</FormItem>
-			<FormItem label="Nombre" hasFeedback>
-				{getFieldDecorator('name', {
-					rules: [{ required: true, message: 'Escriba el nombre' }],
-					initialValue: departments.name,
-				})(<Input placeholder="Nombre" />)}
+			<FormItem label="Modelo" hasFeedback>
+				{getFieldDecorator('model', {
+					rules: [{ required: true, message: 'Escriba el modelo' }],
+					initialValue: vehicles.model,
+				})(<Input placeholder="Modelo" />)}
 			</FormItem>
-			<FormItem label="Descripcion" hasFeedback>
-				{getFieldDecorator('description', {
-					rules: [{ required: true, message: 'Escriba una descripcion' }],
-					initialValue: departments.description,
-				})(<Input placeholder="Descripcion" />)}
+			<FormItem label="Año" hasFeedback>
+				{getFieldDecorator('year', {
+					rules: [{ required: true, message: 'Escriba el año' }],
+					initialValue: vehicles.year,
+				})(<Input placeholder="Año" />)}
+			</FormItem>
+			<FormItem label="Millaje" hasFeedback>
+				{getFieldDecorator('mileage', {
+					rules: [{ required: true, message: 'Escriba el millaje' }],
+					initialValue: vehicles.mileage,
+				})(<Input placeholder="Millaje" />)}
+			</FormItem>
+			<FormItem label="Kilometraje" hasFeedback>
+				{getFieldDecorator('kilometers', {
+					rules: [{ required: true, message: 'Escriba el kilometraje' }],
+					initialValue: vehicles.kilometers,
+				})(<Input placeholder="Kilometraje" />)}
 			</FormItem>
 			<Form.Item>
 				<Button
@@ -83,16 +95,16 @@ const EditDepartment = ({
 };
 
 const mapStateToProps = state => {
-	const departments = state.departmentInfo.departments;
+	const vehicles = state.vehicleInfo.vehicles;
 	return {
-		departments,
+		vehicles,
 	};
 };
 
-const EnhancedDepartmentEditForm = Form.create({ name: 'department_edit' })(
-	EditDepartment
+const EnhancedVehicleEditForm = Form.create({ name: 'vehicle_edit' })(
+	EditVehicle
 );
 
 export default connect(mapStateToProps, {
-	fetchSingleDepartment,
-})(EnhancedDepartmentEditForm);
+	fetchSingleVehicle,
+})(EnhancedVehicleEditForm);

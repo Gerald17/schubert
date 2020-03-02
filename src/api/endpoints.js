@@ -6,4 +6,5 @@ export const endpoints = {
 	workPosition: 'api/workPosition',
 	companies: 'api/Company',
 	teamJourney: 'api/TeamJourney',
+	vehicle: 'api/Vehicle',
 };

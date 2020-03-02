@@ -6,13 +6,13 @@ import { endpoints } from '../api/endpoints';
 const request = new HttpRequest();
 
 export const fetchDepartment = () => async dispatch => {
-	const department = await request
+	const departments = await request
 		.fetchData(endpoints.siteDepartment)
 		.then(response => response.data);
 	dispatch({
 		type: FETCH_DEPARTMENT,
 		payload: {
-			department,
+			departments,
 		},
 	});
 };

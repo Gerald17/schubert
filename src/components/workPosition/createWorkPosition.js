@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 
-import { fetchSingleCompany } from '../../actions/companiesActions';
+import { fetchWorkArea } from '../../actions/workAreaActions';
+import { getOptions } from '../../utils/common';
 
 import HttpRequest from '../../api/HttpRequest';
 import { endpoints } from '../../api/endpoints';
@@ -10,16 +11,16 @@ import { endpoints } from '../../api/endpoints';
 const request = new HttpRequest();
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
-const EditCompany = ({
-	companies,
-	fetchSingleCompany,
-	match: { params },
+const CreateWorkPosition = ({
+	workAreas,
+	fetchWorkArea,
 	form: { getFieldDecorator, getFieldsError, validateFields },
 }) => {
 	useEffect(() => {
-		fetchSingleCompany(params.companyId);
-	}, [fetchSingleCompany, params]);
+		fetchWorkArea();
+	}, [fetchWorkArea]);
 
 	const hasErrors = fieldsError => {
 		return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -30,10 +31,10 @@ const EditCompany = ({
 		validateFields((err, values) => {
 			if (!err) {
 				request
-					.updateData(`${endpoints.companies}/${companies.id}`, values)
+					.createData(`${endpoints.workPosition}`, values)
 					.then(response => {
 						if (response.status === 200 || response.status === 204) {
-							message.success('Datos actualizados exitosamente');
+							message.success('Registro creado exitosamente');
 						}
 					})
 					.catch(error => {
@@ -43,39 +44,39 @@ const EditCompany = ({
 		});
 	};
 
-	//const nameError = isFieldTouched("name") && getFieldError("name");
-	//const nitError = isFieldTouched("nit") && getFieldError("nit");
-	//const isssError = isFieldTouched("isss") && getFieldError("isss");
-	//const workPositionError = isFieldTouched("workPosition") && getFieldError("workPosition");
-	//const companyIdError = isFieldTouched("companyId") && getFieldError("companyId");
-	//const workerTeamIdError = isFieldTouched("workerTeamId") && getFieldError("workerTeamId");
-	console.log('companies', companies);
-
 	return (
 		<Form onSubmit={handleSubmit} layout="vertical">
-			<FormItem label="Id">
-				{getFieldDecorator('id', {
-					initialValue: companies.id,
-				})(<Input disabled />)}
-			</FormItem>
 			<FormItem label="Nombre" hasFeedback>
 				{getFieldDecorator('name', {
 					rules: [{ required: true, message: 'Escriba el nombre' }],
-					initialValue: companies.name,
 				})(<Input placeholder="Nombre" />)}
 			</FormItem>
 			<FormItem label="Descripcion" hasFeedback>
 				{getFieldDecorator('description', {
 					rules: [{ required: true, message: 'Escriba la descripcion' }],
-					initialValue: companies.description,
-				})(<Input placeholder="Descripcion" />)}
+				})(<Input placeholder="description" />)}
+			</FormItem>
+			<FormItem label="Area de Trabajo" hasFeedback>
+				{getFieldDecorator('workAreaId', {
+					rules: [{ required: true, message: 'Seleccione el area de trabajo' }],
+				})(
+					<Select style={{ width: '200px' }}>
+						{workAreas.map(option => {
+							return (
+								<Option key={option.value} value={option.value}>
+									{option.name}
+								</Option>
+							);
+						})}
+					</Select>
+				)}
 			</FormItem>
 			<Form.Item>
 				<Button
 					type="primary"
 					htmlType="submit"
 					disabled={hasErrors(getFieldsError())}>
-					Actualizar
+					Crear
 				</Button>
 			</Form.Item>
 		</Form>
@@ -83,16 +84,16 @@ const EditCompany = ({
 };
 
 const mapStateToProps = state => {
-	const companies = state.companiesInfo.companies;
+	const workAreas = getOptions(state.workAreasInfo.workAreas);
 	return {
-		companies,
+		workAreas,
 	};
 };
 
-const EnhancedCompanyEditForm = Form.create({ name: 'company_edit' })(
-	EditCompany
-);
+const EnhancedCreateWorkPositionForm = Form.create({
+	name: 'workPosition_create',
+})(CreateWorkPosition);
 
 export default connect(mapStateToProps, {
-	fetchSingleCompany,
-})(EnhancedCompanyEditForm);
+	fetchWorkArea,
+})(EnhancedCreateWorkPositionForm);
