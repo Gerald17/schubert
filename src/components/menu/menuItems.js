@@ -9,6 +9,14 @@ import CreateWorker from '../../components/workers/createWorker';
 import company from '../company';
 import editCompany from '../company/editCompany';
 import createCompany from '../company/createCompany';
+import Department from '../department';
+import WorkPosition from '../workPosition';
+import Vehicle from '../vehicle';
+import editDepartment from '../department/editDepartment';
+import CreateDepartment from '../department/createDepartment';
+import workArea from '../workArea';
+import editWorkArea from '../workArea/editWorkArea';
+import createWorkArea from '../workArea/createWorkArea';
 
 export const menuItems = [
 	{
@@ -31,7 +39,11 @@ export const menuItems = [
 		submenu: [
 			{ id: 31, label: 'Personas', link: '/persons' },
 			{ id: 32, label: 'Camiones', link: '/trucks' },
-			{ id: 33, label: 'Compañias', link: '/company' },
+			{ id: 33, label: 'Compañia', link: '/company' },
+			{ id: 34, label: 'Departamento', link: '/siteDepartment' },
+			{ id: 35, label: 'Posicion de trabajo', link: '/workPosition' },
+			{ id: 36, label: 'Area de trabajo', link: '/workArea' },
+			{ id: 37, label: 'Vehiculo', link: '/vehicle' },
 		],
 	},
 ];
@@ -91,5 +103,65 @@ export const menuComponents = [
 		id: 62,
 		component: createCompany,
 		path: '/company/create',
+	},
+	{
+		id: 7,
+		component: Department,
+		path: '/siteDepartment',
+	},
+	{
+		id: 71,
+		component: editDepartment,
+		path: '/siteDepartment/edit/:departmentId',
+	},
+	{
+		id: 72,
+		component: CreateDepartment,
+		path: '/siteDepartment/create',
+	},
+	{
+		id: 8,
+		component: WorkPosition,
+		path: '/workPosition',
+	},
+	{
+		id: 81,
+		component: editCompany,
+		path: '/workPosition/edit/:workPositionId',
+	},
+	{
+		id: 82,
+		component: createCompany,
+		path: '/workPosition/create',
+	},
+	{
+		id: 9,
+		component: workArea,
+		path: '/workArea',
+	},
+	{
+		id: 91,
+		component: editWorkArea,
+		path: '/workArea/edit/:workAreaId',
+	},
+	{
+		id: 92,
+		component: createWorkArea,
+		path: '/workArea/create',
+	},
+	{
+		id: 100,
+		component: Vehicle,
+		path: '/vehicle',
+	},
+	{
+		id: 101,
+		component: editCompany,
+		path: '/vehicle/edit/:vehicleId',
+	},
+	{
+		id: 102,
+		component: createCompany,
+		path: '/vehicle/create',
 	},
 ];
